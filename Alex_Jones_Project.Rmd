@@ -1,0 +1,1088 @@
+---
+title: "Alex Jones Project"
+author: "Jill Hart"
+date: '2023-06-08'
+output: html_document
+---
+
+```{r setup, include=FALSE}
+library(tidyverse)
+library(stringr)
+```
+
+
+## Test Code
+aj20021031 <- read.table("https://github.com/Fudge/infowars/raw/main/20021031_Gertz_Alex.txt", sep = "\t", quote="")
+aj20021031$start <- str_extract(aj20021031$V1, "[0-9]{2}:[0-9]{2}")
+aj20021031$end <- str_extract(aj20021031$V1, "\\s[0-9]{2}:[0-9]{2}.[0-9]{2,}.") %>% str_extract(., "[0-9]{2}:[0-9]{2}")
+aj20021031$text <- str_extract(aj20021031$V1, "\\]\\s(.{1,})") %>% str_remove(., "\\]\\s\\s")
+aj20021031$date <- as.Date(2002-10-31)
+
+
+```{r Files}
+aj20021207 <- read.table("https://github.com/Fudge/infowars/raw/main/20021207_Page_Alex.txt", sep = "\t", quote="")
+aj20021031 <- read.table("https://github.com/Fudge/infowars/raw/main/20021031_Gertz_Alex.txt", sep = "\t", quote="")
+aj20021106 <- read.table("https://github.com/Fudge/infowars/raw/main/20021106_Liddy_Alex.txt", sep = "\t", quote="")
+aj20021122 <- read.table("https://github.com/Fudge/infowars/raw/main/20021122_Coots_Alex.txt", sep = "\t", quote="")
+aj20021123 <- read.table("https://github.com/Fudge/infowars/raw/main/20021123_Brock_Alex.txt", sep = "\t", quote="")
+aj20021128 <- read.table("https://github.com/Fudge/infowars/raw/main/20021128_Agras_Alex.txt", sep = "\t", quote="")
+aj20021030 <- read.table("https://github.com/Fudge/infowars/raw/main/20021030_Benoit_Alex.txt", sep = "\t", quote="")
+aj20021104 <- read.table("https://github.com/Fudge/infowars/raw/main/20021104_Palast_Alex.txt", sep = "\t", quote="")
+aj20021114 <- read.table("https://github.com/Fudge/infowars/raw/main/20021114_Serkes_Alex.txt", sep = "\t", quote="")
+aj20021121 <- read.table("https://github.com/Fudge/infowars/raw/main/20021121_Klicka_Alex.txt", sep = "\t", quote="")
+aj20021206 <- read.table("https://github.com/Fudge/infowars/raw/main/20021206_Morris_Alex.txt", sep = "\t", quote="")
+aj20021105 <- read.table("https://github.com/Fudge/infowars/raw/main/20021105_Douglas_Alex.txt", sep = "\t", quote="")
+aj20021128 <- read.table("https://github.com/Fudge/infowars/raw/main/20021128_Camelli_Alex.txt", sep = "\t", quote="")
+aj20021207 <- read.table("https://github.com/Fudge/infowars/raw/main/20021207_Boyster_Alex.txt", sep = "\t", quote="")
+aj20021101 <- read.table("https://github.com/Fudge/infowars/raw/main/20021101_Monteith_Alex.txt", sep = "\t", quote="")
+aj20021123 <- read.table("https://github.com/Fudge/infowars/raw/main/20021123_Matthews_Alex.txt", sep = "\t", quote="")
+aj20021126 <- read.table("https://github.com/Fudge/infowars/raw/main/20021126_Grijalva_Alex.txt", sep = "\t", quote="")
+aj20021126 <- read.table("https://github.com/Fudge/infowars/raw/main/20021126_McCullag_Alex.txt", sep = "\t", quote="")
+aj20021127 <- read.table("https://github.com/Fudge/infowars/raw/main/20021127_Tancredo_Alex.txt", sep = "\t", quote="")
+aj20021128 <- read.table("https://github.com/Fudge/infowars/raw/main/20021128_Scheidegger_Alex.txt", sep = "\t", quote="")
+aj20200202 <- read.table("https://github.com/Fudge/infowars/raw/main/20200202_Sun_Alex.txt", sep = "\t", quote="")
+aj20200203 <- read.table("https://github.com/Fudge/infowars/raw/main/20200203_Mon_Alex.txt", sep = "\t", quote="")
+aj20200204 <- read.table("https://github.com/Fudge/infowars/raw/main/20200204_Tue_Alex.txt", sep = "\t", quote="")
+aj20200205 <- read.table("https://github.com/Fudge/infowars/raw/main/20200205_Wed_Alex.txt", sep = "\t", quote="")
+aj20200206 <- read.table("https://github.com/Fudge/infowars/raw/main/20200206_Thu_Alex.txt", sep = "\t", quote="")
+aj20200207 <- read.table("https://github.com/Fudge/infowars/raw/main/20200207_Fri_Alex.txt", sep = "\t", quote="")
+aj20200209 <- read.table("https://github.com/Fudge/infowars/raw/main/20200209_Sun_Alex.txt", sep = "\t", quote="")
+aj20200210 <- read.table("https://github.com/Fudge/infowars/raw/main/20200210_Mon_Alex.txt", sep = "\t", quote="")
+aj20200211 <- read.table("https://github.com/Fudge/infowars/raw/main/20200211_Tue_Alex.txt", sep = "\t", quote="")
+aj20200212 <- read.table("https://github.com/Fudge/infowars/raw/main/20200212_Wed_Alex.txt", sep = "\t", quote="")
+aj20200213 <- read.table("https://github.com/Fudge/infowars/raw/main/20200213_Thu_Alex.txt", sep = "\t", quote="")
+aj20200214 <- read.table("https://github.com/Fudge/infowars/raw/main/20200214_Fri_Alex.txt", sep = "\t", quote="")
+aj20200216 <- read.table("https://github.com/Fudge/infowars/raw/main/20200216_Sun_Alex.txt", sep = "\t", quote="")
+aj20200217 <- read.table("https://github.com/Fudge/infowars/raw/main/20200217_Mon_Alex.txt", sep = "\t", quote="")
+aj20200218 <- read.table("https://github.com/Fudge/infowars/raw/main/20200218_Tue_Alex.txt", sep = "\t", quote="")
+aj20200219 <- read.table("https://github.com/Fudge/infowars/raw/main/20200219_Wed_Alex.txt", sep = "\t", quote="")
+aj20200220 <- read.table("https://github.com/Fudge/infowars/raw/main/20200220_Thu_Alex.txt", sep = "\t", quote="")
+aj20200221 <- read.table("https://github.com/Fudge/infowars/raw/main/20200221_Fri_Alex.txt", sep = "\t", quote="")
+aj20200224 <- read.table("https://github.com/Fudge/infowars/raw/main/20200224_Mon_Alex.txt", sep = "\t", quote="")
+aj20200225 <- read.table("https://github.com/Fudge/infowars/raw/main/20200225_Tue_Alex.txt", sep = "\t", quote="")
+aj20200226 <- read.table("https://github.com/Fudge/infowars/raw/main/20200226_Wed_Alex.txt", sep = "\t", quote="")
+aj20200227 <- read.table("https://github.com/Fudge/infowars/raw/main/20200227_Thu_Alex.txt", sep = "\t", quote="")
+aj20200228 <- read.table("https://github.com/Fudge/infowars/raw/main/20200228_Fri_Alex.txt", sep = "\t", quote="")
+aj20040204 <- read.table("https://github.com/Fudge/infowars/raw/main/20040204_Wed_Alex.txt", sep = "\t", quote="")
+aj20041214 <- read.table("https://github.com/Fudge/infowars/raw/main/20041214_Tue_Alex.txt", sep = "\t", quote="")
+aj20061206 <- read.table("https://github.com/Fudge/infowars/raw/main/20061206_Wed_Alex.txt", sep = "\t", quote="")
+aj20061217 <- read.table("https://github.com/Fudge/infowars/raw/main/20061217_Sun_Alex.txt", sep = "\t", quote="")
+aj20061219 <- read.table("https://github.com/Fudge/infowars/raw/main/20061219_Tue_Alex.txt", sep = "\t", quote="")
+aj20070205 <- read.table("https://github.com/Fudge/infowars/raw/main/20070205_Sun_Alex.txt", sep = "\t", quote="")
+aj20070210 <- read.table("https://github.com/Fudge/infowars/raw/main/20070210_Sun_Alex.txt", sep = "\t", quote="")
+aj20070225 <- read.table("https://github.com/Fudge/infowars/raw/main/20070225_Sun_Alex.txt", sep = "\t", quote="")
+aj20070226 <- read.table("https://github.com/Fudge/infowars/raw/main/20070226_Mon_Alex.txt", sep = "\t", quote="")
+aj20070227 <- read.table("https://github.com/Fudge/infowars/raw/main/20070227_Tue_Alex.txt", sep = "\t", quote="")
+aj20130507 <- read.table("https://github.com/Fudge/infowars/raw/main/20130507_Alex.txt", sep = "\t", quote="")
+aj20130101 <- read.table("https://github.com/Fudge/infowars/raw/main/20130101_Tue_Alex.txt", sep = "\t", quote="")
+aj20130102 <- read.table("https://github.com/Fudge/infowars/raw/main/20130102_Wed_Alex.txt", sep = "\t", quote="")
+aj20130103 <- read.table("https://github.com/Fudge/infowars/raw/main/20130103_Thu_Alex.txt", sep = "\t", quote="")
+aj20130104 <- read.table("https://github.com/Fudge/infowars/raw/main/20130104_Fri_Alex.txt", sep = "\t", quote="")
+aj20130106 <- read.table("https://github.com/Fudge/infowars/raw/main/20130106_Sun_Alex.txt", sep = "\t", quote="")
+aj20130107 <- read.table("https://github.com/Fudge/infowars/raw/main/20130107_Mon_Alex.txt", sep = "\t", quote="")
+aj20130108 <- read.table("https://github.com/Fudge/infowars/raw/main/20130108_Tue_Alex.txt", sep = "\t", quote="")
+aj20130109 <- read.table("https://github.com/Fudge/infowars/raw/main/20130109_Wed_Alex.txt", sep = "\t", quote="")
+aj20130110 <- read.table("https://github.com/Fudge/infowars/raw/main/20130110_Thu_Alex.txt", sep = "\t", quote="")
+aj20130111 <- read.table("https://github.com/Fudge/infowars/raw/main/20130111_Fri_Alex.txt", sep = "\t", quote="")
+aj20130113 <- read.table("https://github.com/Fudge/infowars/raw/main/20130113_Sun_Alex.txt", sep = "\t", quote="")
+aj20130114 <- read.table("https://github.com/Fudge/infowars/raw/main/20130114_Mon_Alex.txt", sep = "\t", quote="")
+aj20130115 <- read.table("https://github.com/Fudge/infowars/raw/main/20130115_Tue_Alex.txt", sep = "\t", quote="")
+aj20130116 <- read.table("https://github.com/Fudge/infowars/raw/main/20130116_Wed_Alex.txt", sep = "\t", quote="")
+aj20130117 <- read.table("https://github.com/Fudge/infowars/raw/main/20130117_Thu_Alex.txt", sep = "\t", quote="")
+aj20130118 <- read.table("https://github.com/Fudge/infowars/raw/main/20130118_Fri_Alex.txt", sep = "\t", quote="")
+aj20130120 <- read.table("https://github.com/Fudge/infowars/raw/main/20130120_Sun_Alex.txt", sep = "\t", quote="")
+aj20130121 <- read.table("https://github.com/Fudge/infowars/raw/main/20130121_Mon_Alex.txt", sep = "\t", quote="")
+aj20130122 <- read.table("https://github.com/Fudge/infowars/raw/main/20130122_Tue_Alex.txt", sep = "\t", quote="")
+aj20130123 <- read.table("https://github.com/Fudge/infowars/raw/main/20130123_Wed_Alex.txt", sep = "\t", quote="")
+aj20130124 <- read.table("https://github.com/Fudge/infowars/raw/main/20130124_Thu_Alex.txt", sep = "\t", quote="")
+aj20130125 <- read.table("https://github.com/Fudge/infowars/raw/main/20130125_Fri_Alex.txt", sep = "\t", quote="")
+aj20130127 <- read.table("https://github.com/Fudge/infowars/raw/main/20130127_Sun_Alex.txt", sep = "\t", quote="")
+aj20130128 <- read.table("https://github.com/Fudge/infowars/raw/main/20130128_Mon_Alex.txt", sep = "\t", quote="")
+aj20130129 <- read.table("https://github.com/Fudge/infowars/raw/main/20130129_Tue_Alex.txt", sep = "\t", quote="")
+aj20130130 <- read.table("https://github.com/Fudge/infowars/raw/main/20130130_Wed_Alex.txt", sep = "\t", quote="")
+aj20130131 <- read.table("https://github.com/Fudge/infowars/raw/main/20130131_Thu_Alex.txt", sep = "\t", quote="")
+aj20130201 <- read.table("https://github.com/Fudge/infowars/raw/main/20130201_Fri_Alex.txt", sep = "\t", quote="")
+aj20130203 <- read.table("https://github.com/Fudge/infowars/raw/main/20130203_Sun_Alex.txt", sep = "\t", quote="")
+aj20130204 <- read.table("https://github.com/Fudge/infowars/raw/main/20130204_Mon_Alex.txt", sep = "\t", quote="")
+aj20130205 <- read.table("https://github.com/Fudge/infowars/raw/main/20130205_Tue_Alex.txt", sep = "\t", quote="")
+aj20130206 <- read.table("https://github.com/Fudge/infowars/raw/main/20130206_Wed_Alex.txt", sep = "\t", quote="")
+aj20130207 <- read.table("https://github.com/Fudge/infowars/raw/main/20130207_Thu_Alex.txt", sep = "\t", quote="")
+aj20130208 <- read.table("https://github.com/Fudge/infowars/raw/main/20130208_Fri_Alex.txt", sep = "\t", quote="")
+aj20130210 <- read.table("https://github.com/Fudge/infowars/raw/main/20130210_Sun_Alex.txt", sep = "\t", quote="")
+aj20130211 <- read.table("https://github.com/Fudge/infowars/raw/main/20130211_Mon_Alex.txt", sep = "\t", quote="")
+aj20130212 <- read.table("https://github.com/Fudge/infowars/raw/main/20130212_Tue_Alex.txt", sep = "\t", quote="")
+aj20130213 <- read.table("https://github.com/Fudge/infowars/raw/main/20130213_Wed_Alex.txt", sep = "\t", quote="")
+aj20130214 <- read.table("https://github.com/Fudge/infowars/raw/main/20130214_Thu_Alex.txt", sep = "\t", quote="")
+aj20130215 <- read.table("https://github.com/Fudge/infowars/raw/main/20130215_Fri_Alex.txt", sep = "\t", quote="")
+aj20130217 <- read.table("https://github.com/Fudge/infowars/raw/main/20130217_Sun_Alex.txt", sep = "\t", quote="")
+aj20130218 <- read.table("https://github.com/Fudge/infowars/raw/main/20130218_Mon_Alex.txt", sep = "\t", quote="")
+aj20130219 <- read.table("https://github.com/Fudge/infowars/raw/main/20130219_Tue_Alex.txt", sep = "\t", quote="")
+aj20130220 <- read.table("https://github.com/Fudge/infowars/raw/main/20130220_Wed_Alex.txt", sep = "\t", quote="")
+aj20130221 <- read.table("https://github.com/Fudge/infowars/raw/main/20130221_Thu_Alex.txt", sep = "\t", quote="")
+aj20130222 <- read.table("https://github.com/Fudge/infowars/raw/main/20130222_Fri_Alex.txt", sep = "\t", quote="")
+aj20130224 <- read.table("https://github.com/Fudge/infowars/raw/main/20130224_Sun_Alex.txt", sep = "\t", quote="")
+aj20130225 <- read.table("https://github.com/Fudge/infowars/raw/main/20130225_Mon_Alex.txt", sep = "\t", quote="")
+aj20130226 <- read.table("https://github.com/Fudge/infowars/raw/main/20130226_Tue_Alex.txt", sep = "\t", quote="")
+aj20130227 <- read.table("https://github.com/Fudge/infowars/raw/main/20130227_Wed_Alex.txt", sep = "\t", quote="")
+aj20130228 <- read.table("https://github.com/Fudge/infowars/raw/main/20130228_Thu_Alex.txt", sep = "\t", quote="")
+aj20130301 <- read.table("https://github.com/Fudge/infowars/raw/main/20130301_Fri_Alex.txt", sep = "\t", quote="")
+aj20160101 <- read.table("https://github.com/Fudge/infowars/raw/main/20160101_Fri_Alex.txt", sep = "\t", quote="")
+aj20160103 <- read.table("https://github.com/Fudge/infowars/raw/main/20160103_Sun_Alex.txt", sep = "\t", quote="")
+aj20160104 <- read.table("https://github.com/Fudge/infowars/raw/main/20160104_Mon_Alex.txt", sep = "\t", quote="")
+aj20160105 <- read.table("https://github.com/Fudge/infowars/raw/main/20160105_Tue_Alex.txt", sep = "\t", quote="")
+aj20160106 <- read.table("https://github.com/Fudge/infowars/raw/main/20160106_Wed_Alex.txt", sep = "\t", quote="")
+aj20160107 <- read.table("https://github.com/Fudge/infowars/raw/main/20160107_Thu_Alex.txt", sep = "\t", quote="")
+aj20160108 <- read.table("https://github.com/Fudge/infowars/raw/main/20160108_Fri_Alex.txt", sep = "\t", quote="")
+aj20160110 <- read.table("https://github.com/Fudge/infowars/raw/main/20160110_Sun_Alex.txt", sep = "\t", quote="")
+aj20160111 <- read.table("https://github.com/Fudge/infowars/raw/main/20160111_Mon_Alex.txt", sep = "\t", quote="")
+aj20160112 <- read.table("https://github.com/Fudge/infowars/raw/main/20160112_Tue_Alex.txt", sep = "\t", quote="")
+aj20160113 <- read.table("https://github.com/Fudge/infowars/raw/main/20160113_Wed_Alex.txt", sep = "\t", quote="")
+aj20160114 <- read.table("https://github.com/Fudge/infowars/raw/main/20160114_Thu_Alex.txt", sep = "\t", quote="")
+aj20160115 <- read.table("https://github.com/Fudge/infowars/raw/main/20160115_Fri_Alex.txt", sep = "\t", quote="")
+aj20160117 <- read.table("https://github.com/Fudge/infowars/raw/main/20160117_Sun_Alex.txt", sep = "\t", quote="")
+aj20160118 <- read.table("https://github.com/Fudge/infowars/raw/main/20160118_Mon_Alex.txt", sep = "\t", quote="")
+aj20160119 <- read.table("https://github.com/Fudge/infowars/raw/main/20160119_Tue_Alex.txt", sep = "\t", quote="")
+aj20160120 <- read.table("https://github.com/Fudge/infowars/raw/main/20160120_Wed_Alex.txt", sep = "\t", quote="")
+aj20160121 <- read.table("https://github.com/Fudge/infowars/raw/main/20160121_Thu_Alex.txt", sep = "\t", quote="")
+aj20160122 <- read.table("https://github.com/Fudge/infowars/raw/main/20160122_Fri_Alex.txt", sep = "\t", quote="")
+aj20160124 <- read.table("https://github.com/Fudge/infowars/raw/main/20160124_Sun_Alex.txt", sep = "\t", quote="")
+aj20160125 <- read.table("https://github.com/Fudge/infowars/raw/main/20160125_Mon_Alex.txt", sep = "\t", quote="")
+aj20160126 <- read.table("https://github.com/Fudge/infowars/raw/main/20160126_Tue_Alex.txt", sep = "\t", quote="")
+aj20160127 <- read.table("https://github.com/Fudge/infowars/raw/main/20160127_Wed_Alex.txt", sep = "\t", quote="")
+aj20160128 <- read.table("https://github.com/Fudge/infowars/raw/main/20160128_Thu_Alex.txt", sep = "\t", quote="")
+aj20160129 <- read.table("https://github.com/Fudge/infowars/raw/main/20160129_Fri_Alex.txt", sep = "\t", quote="")
+aj20160131 <- read.table("https://github.com/Fudge/infowars/raw/main/20160131_Sun_Alex.txt", sep = "\t", quote="")
+aj20160201 <- read.table("https://github.com/Fudge/infowars/raw/main/20160201_Mon_Alex.txt", sep = "\t", quote="")
+aj20160202 <- read.table("https://github.com/Fudge/infowars/raw/main/20160202_Tue_Alex.txt", sep = "\t", quote="")
+aj20160203 <- read.table("https://github.com/Fudge/infowars/raw/main/20160203_Wed_Alex.txt", sep = "\t", quote="")
+aj20160204 <- read.table("https://github.com/Fudge/infowars/raw/main/20160204_Thu_Alex.txt", sep = "\t", quote="")
+aj20160205 <- read.table("https://github.com/Fudge/infowars/raw/main/20160205_Fri_Alex.txt", sep = "\t", quote="")
+aj20160207 <- read.table("https://github.com/Fudge/infowars/raw/main/20160207_Sun_Alex.txt", sep = "\t", quote="")
+aj20160208 <- read.table("https://github.com/Fudge/infowars/raw/main/20160208_Mon_Alex.txt", sep = "\t", quote="")
+aj20160209 <- read.table("https://github.com/Fudge/infowars/raw/main/20160209_Tue_Alex.txt", sep = "\t", quote="")
+aj20160210 <- read.table("https://github.com/Fudge/infowars/raw/main/20160210_Wed_Alex.txt", sep = "\t", quote="")
+aj20160211 <- read.table("https://github.com/Fudge/infowars/raw/main/20160211_Thu_Alex.txt", sep = "\t", quote="")
+aj20160212 <- read.table("https://github.com/Fudge/infowars/raw/main/20160212_Fri_Alex.txt", sep = "\t", quote="")
+aj20160214 <- read.table("https://github.com/Fudge/infowars/raw/main/20160214_Sun_Alex.txt", sep = "\t", quote="")
+aj20160215 <- read.table("https://github.com/Fudge/infowars/raw/main/20160215_Mon_Alex.txt", sep = "\t", quote="")
+aj20160216 <- read.table("https://github.com/Fudge/infowars/raw/main/20160216_Tue_Alex.txt", sep = "\t", quote="")
+aj20160217 <- read.table("https://github.com/Fudge/infowars/raw/main/20160217_Wed_Alex.txt", sep = "\t", quote="")
+aj20160218 <- read.table("https://github.com/Fudge/infowars/raw/main/20160218_Thu_Alex.txt", sep = "\t", quote="")
+aj20160219 <- read.table("https://github.com/Fudge/infowars/raw/main/20160219_Fri_Alex.txt", sep = "\t", quote="")
+aj20160221 <- read.table("https://github.com/Fudge/infowars/raw/main/20160221_Sun_Alex.txt", sep = "\t", quote="")
+aj20160222 <- read.table("https://github.com/Fudge/infowars/raw/main/20160222_Mon_Alex.txt", sep = "\t", quote="")
+aj20160223 <- read.table("https://github.com/Fudge/infowars/raw/main/20160223_Tue_Alex.txt", sep = "\t", quote="")
+aj20160224 <- read.table("https://github.com/Fudge/infowars/raw/main/20160224_Wed_Alex.txt", sep = "\t", quote="")
+aj20160225 <- read.table("https://github.com/Fudge/infowars/raw/main/20160225_Thu_Alex.txt", sep = "\t", quote="")
+aj20160226 <- read.table("https://github.com/Fudge/infowars/raw/main/20160226_Fri_Alex.txt", sep = "\t", quote="")
+aj20160228 <- read.table("https://github.com/Fudge/infowars/raw/main/20160228_Sun_Alex.txt", sep = "\t", quote="")
+aj20160229 <- read.table("https://github.com/Fudge/infowars/raw/main/20160229_Mon_Alex.txt", sep = "\t", quote="")
+aj20160301 <- read.table("https://github.com/Fudge/infowars/raw/main/20160301_Tue_Alex.txt", sep = "\t", quote="")
+aj20160302 <- read.table("https://github.com/Fudge/infowars/raw/main/20160302_Wed_Alex.txt", sep = "\t", quote="")
+aj20220102 <- read.table("https://github.com/Fudge/infowars/raw/main/20220102_Sun_Alex.txt", sep = "\t", quote="")
+aj20220103 <- read.table("https://github.com/Fudge/infowars/raw/main/20220103_Mon_Alex.txt", sep = "\t", quote="")
+aj20220104 <- read.table("https://github.com/Fudge/infowars/raw/main/20220104_Tue_Alex.txt", sep = "\t", quote="")
+aj20220105 <- read.table("https://github.com/Fudge/infowars/raw/main/20220105_Wed_Alex.txt", sep = "\t", quote="")
+aj20220106 <- read.table("https://github.com/Fudge/infowars/raw/main/20220106_Thu_Alex.txt", sep = "\t", quote="")
+aj20220107 <- read.table("https://github.com/Fudge/infowars/raw/main/20220107_Fri_Alex.txt", sep = "\t", quote="")
+aj20220109 <- read.table("https://github.com/Fudge/infowars/raw/main/20220109_Sun_Alex.txt", sep = "\t", quote="")
+aj20220110 <- read.table("https://github.com/Fudge/infowars/raw/main/20220110_Mon_Alex.txt", sep = "\t", quote="")
+aj20220111 <- read.table("https://github.com/Fudge/infowars/raw/main/20220111_Tue_Alex.txt", sep = "\t", quote="")
+aj20220112 <- read.table("https://github.com/Fudge/infowars/raw/main/20220112_Wed_Alex.txt", sep = "\t", quote="")
+aj20220113 <- read.table("https://github.com/Fudge/infowars/raw/main/20220113_Thu_Alex.txt", sep = "\t", quote="")
+aj20220114 <- read.table("https://github.com/Fudge/infowars/raw/main/20220114_Fri_Alex.txt", sep = "\t", quote="")
+aj20220116 <- read.table("https://github.com/Fudge/infowars/raw/main/20220116_Sun_Alex.txt", sep = "\t", quote="")
+aj20220117 <- read.table("https://github.com/Fudge/infowars/raw/main/20220117_Mon_Alex.txt", sep = "\t", quote="")
+aj20220118 <- read.table("https://github.com/Fudge/infowars/raw/main/20220118_Tue_Alex.txt", sep = "\t", quote="")
+aj20220119 <- read.table("https://github.com/Fudge/infowars/raw/main/20220119_Wed_Alex.txt", sep = "\t", quote="")
+aj20220120 <- read.table("https://github.com/Fudge/infowars/raw/main/20220120_Thu_Alex.txt", sep = "\t", quote="")
+aj20220121 <- read.table("https://github.com/Fudge/infowars/raw/main/20220121_Fri_Alex.txt", sep = "\t", quote="")
+aj20220123 <- read.table("https://github.com/Fudge/infowars/raw/main/20220123_Sun_Alex.txt", sep = "\t", quote="")
+aj20220124 <- read.table("https://github.com/Fudge/infowars/raw/main/20220124_Mon_Alex.txt", sep = "\t", quote="")
+aj20220125 <- read.table("https://github.com/Fudge/infowars/raw/main/20220125_Tue_Alex.txt", sep = "\t", quote="")
+aj20220126 <- read.table("https://github.com/Fudge/infowars/raw/main/20220126_Wed_Alex.txt", sep = "\t", quote="")
+aj20220127 <- read.table("https://github.com/Fudge/infowars/raw/main/20220127_Thu_Alex.txt", sep = "\t", quote="")
+aj20220128 <- read.table("https://github.com/Fudge/infowars/raw/main/20220128_Fri_Alex.txt", sep = "\t", quote="")
+aj20220130 <- read.table("https://github.com/Fudge/infowars/raw/main/20220130_Sun_Alex.txt", sep = "\t", quote="")
+aj20220131 <- read.table("https://github.com/Fudge/infowars/raw/main/20220131_Mon_Alex.txt", sep = "\t", quote="")
+aj20220201 <- read.table("https://github.com/Fudge/infowars/raw/main/20220201_Tue_Alex.txt", sep = "\t", quote="")
+aj20220202 <- read.table("https://github.com/Fudge/infowars/raw/main/20220202_Wed_Alex.txt", sep = "\t", quote="")
+aj20220203 <- read.table("https://github.com/Fudge/infowars/raw/main/20220203_Thu_Alex.txt", sep = "\t", quote="")
+aj20220204 <- read.table("https://github.com/Fudge/infowars/raw/main/20220204_Fri_Alex.txt", sep = "\t", quote="")
+aj20220206 <- read.table("https://github.com/Fudge/infowars/raw/main/20220206_Sun_Alex.txt", sep = "\t", quote="")
+aj20220207 <- read.table("https://github.com/Fudge/infowars/raw/main/20220207_Mon_Alex.txt", sep = "\t", quote="")
+aj20220208 <- read.table("https://github.com/Fudge/infowars/raw/main/20220208_Tue_Alex.txt", sep = "\t", quote="")
+aj20220209 <- read.table("https://github.com/Fudge/infowars/raw/main/20220209_Wed_Alex.txt", sep = "\t", quote="")
+aj20220210 <- read.table("https://github.com/Fudge/infowars/raw/main/20220210_Thu_Alex.txt", sep = "\t", quote="")
+aj20220211 <- read.table("https://github.com/Fudge/infowars/raw/main/20220211_Fri_Alex.txt", sep = "\t", quote="")
+aj20220213 <- read.table("https://github.com/Fudge/infowars/raw/main/20220213_Sun_Alex.txt", sep = "\t", quote="")
+aj20220214 <- read.table("https://github.com/Fudge/infowars/raw/main/20220214_Mon_Alex.txt", sep = "\t", quote="")
+aj20220215 <- read.table("https://github.com/Fudge/infowars/raw/main/20220215_Tue_Alex.txt", sep = "\t", quote="")
+aj20220216 <- read.table("https://github.com/Fudge/infowars/raw/main/20220216_Wed_Alex.txt", sep = "\t", quote="")
+aj20220217 <- read.table("https://github.com/Fudge/infowars/raw/main/20220217_Thu_Alex.txt", sep = "\t", quote="")
+aj20220218 <- read.table("https://github.com/Fudge/infowars/raw/main/20220218_Fri_Alex.txt", sep = "\t", quote="")
+aj20220220 <- read.table("https://github.com/Fudge/infowars/raw/main/20220220_Sun_Alex.txt", sep = "\t", quote="")
+aj20220221 <- read.table("https://github.com/Fudge/infowars/raw/main/20220221_Mon_Alex.txt", sep = "\t", quote="")
+aj20220222 <- read.table("https://github.com/Fudge/infowars/raw/main/20220222_Tue_Alex.txt", sep = "\t", quote="")
+aj20220223 <- read.table("https://github.com/Fudge/infowars/raw/main/20220223_Wed_Alex.txt", sep = "\t", quote="")
+aj20220224 <- read.table("https://github.com/Fudge/infowars/raw/main/20220224_Thu_Alex.txt", sep = "\t", quote="")
+aj20220225 <- read.table("https://github.com/Fudge/infowars/raw/main/20220225_Fri_Alex.txt", sep = "\t", quote="")
+aj20220227 <- read.table("https://github.com/Fudge/infowars/raw/main/20220227_Sun_Alex.txt", sep = "\t", quote="")
+aj20220228 <- read.table("https://github.com/Fudge/infowars/raw/main/20220228_Mon_Alex.txt", sep = "\t", quote="")
+aj20230101 <- read.table("https://github.com/Fudge/infowars/raw/main/20230101_Sun_Alex.txt", sep = "\t", quote="")
+aj20230102 <- read.table("https://github.com/Fudge/infowars/raw/main/20230102_Mon_Alex.txt", sep = "\t", quote="")
+aj20230103 <- read.table("https://github.com/Fudge/infowars/raw/main/20230103_Tue_Alex.txt", sep = "\t", quote="")
+aj20230104 <- read.table("https://github.com/Fudge/infowars/raw/main/20230104_Wed_Alex.txt", sep = "\t", quote="")
+aj20230105 <- read.table("https://github.com/Fudge/infowars/raw/main/20230105_Thu_Alex.txt", sep = "\t", quote="")
+aj20230106 <- read.table("https://github.com/Fudge/infowars/raw/main/20230106_Fri_Alex.txt", sep = "\t", quote="")
+aj20230108 <- read.table("https://github.com/Fudge/infowars/raw/main/20230108_Sun_Alex.txt", sep = "\t", quote="")
+aj20230109 <- read.table("https://github.com/Fudge/infowars/raw/main/20230109_Mon_Alex.txt", sep = "\t", quote="")
+aj20230110 <- read.table("https://github.com/Fudge/infowars/raw/main/20230110_Tue_Alex.txt", sep = "\t", quote="")
+aj20230111 <- read.table("https://github.com/Fudge/infowars/raw/main/20230111_Wed_Alex.txt", sep = "\t", quote="")
+aj20230112 <- read.table("https://github.com/Fudge/infowars/raw/main/20230112_Thu_Alex.txt", sep = "\t", quote="")
+aj20230113 <- read.table("https://github.com/Fudge/infowars/raw/main/20230113_Fri_Alex.txt", sep = "\t", quote="")
+aj20230115 <- read.table("https://github.com/Fudge/infowars/raw/main/20230115_Sun_Alex.txt", sep = "\t", quote="")
+aj20230116 <- read.table("https://github.com/Fudge/infowars/raw/main/20230116_Mon_Alex.txt", sep = "\t", quote="")
+aj20230117 <- read.table("https://github.com/Fudge/infowars/raw/main/20230117_Tue_Alex.txt", sep = "\t", quote="")
+aj20230118 <- read.table("https://github.com/Fudge/infowars/raw/main/20230118_Wed_Alex.txt", sep = "\t", quote="")
+aj20230119 <- read.table("https://github.com/Fudge/infowars/raw/main/20230119_Thu_Alex.txt", sep = "\t", quote="")
+aj20230120 <- read.table("https://github.com/Fudge/infowars/raw/main/20230120_Fri_Alex.txt", sep = "\t", quote="")
+aj20230122 <- read.table("https://github.com/Fudge/infowars/raw/main/20230122_Sun_Alex.txt", sep = "\t", quote="")
+aj20230123 <- read.table("https://github.com/Fudge/infowars/raw/main/20230123_Mon_Alex.txt", sep = "\t", quote="")
+aj20230124 <- read.table("https://github.com/Fudge/infowars/raw/main/20230124_Tue_Alex.txt", sep = "\t", quote="")
+aj20230125 <- read.table("https://github.com/Fudge/infowars/raw/main/20230125_Wed_Alex.txt", sep = "\t", quote="")
+aj20230126 <- read.table("https://github.com/Fudge/infowars/raw/main/20230126_Thu_Alex.txt", sep = "\t", quote="")
+aj20230127 <- read.table("https://github.com/Fudge/infowars/raw/main/20230127_Fri_Alex.txt", sep = "\t", quote="")
+aj20230129 <- read.table("https://github.com/Fudge/infowars/raw/main/20230129_Sun_Alex.txt", sep = "\t", quote="")
+aj20230130 <- read.table("https://github.com/Fudge/infowars/raw/main/20230130_Mon_Alex.txt", sep = "\t", quote="")
+aj20230131 <- read.table("https://github.com/Fudge/infowars/raw/main/20230131_Tue_Alex.txt", sep = "\t", quote="")
+aj20230201 <- read.table("https://github.com/Fudge/infowars/raw/main/20230201_Wed_Alex.txt", sep = "\t", quote="")
+aj20230202 <- read.table("https://github.com/Fudge/infowars/raw/main/20230202_Thu_Alex.txt", sep = "\t", quote="")
+aj20230203 <- read.table("https://github.com/Fudge/infowars/raw/main/20230203_Fri_Alex.txt", sep = "\t", quote="")
+aj20230205 <- read.table("https://github.com/Fudge/infowars/raw/main/20230205_Sun_Alex.txt", sep = "\t", quote="")
+aj20230206 <- read.table("https://github.com/Fudge/infowars/raw/main/20230206_Mon_Alex.txt", sep = "\t", quote="")
+aj20230207 <- read.table("https://github.com/Fudge/infowars/raw/main/20230207_Tue_Alex.txt", sep = "\t", quote="")
+aj20230208 <- read.table("https://github.com/Fudge/infowars/raw/main/20230208_Wed_Alex.txt", sep = "\t", quote="")
+aj20230209 <- read.table("https://github.com/Fudge/infowars/raw/main/20230209_Thu_Alex.txt", sep = "\t", quote="")
+aj20230210 <- read.table("https://github.com/Fudge/infowars/raw/main/20230210_Fri_Alex.txt", sep = "\t", quote="")
+aj20230212 <- read.table("https://github.com/Fudge/infowars/raw/main/20230212_Sun_Alex.txt", sep = "\t", quote="")
+aj20230213 <- read.table("https://github.com/Fudge/infowars/raw/main/20230213_Mon_Alex.txt", sep = "\t", quote="")
+aj20230214 <- read.table("https://github.com/Fudge/infowars/raw/main/20230214_Tue_Alex.txt", sep = "\t", quote="")
+aj20230215 <- read.table("https://github.com/Fudge/infowars/raw/main/20230215_Wed_Alex.txt", sep = "\t", quote="")
+aj20230216 <- read.table("https://github.com/Fudge/infowars/raw/main/20230216_Thu_Alex.txt", sep = "\t", quote="")
+aj20230217 <- read.table("https://github.com/Fudge/infowars/raw/main/20230217_Fri_Alex.txt", sep = "\t", quote="")
+aj20230219 <- read.table("https://github.com/Fudge/infowars/raw/main/20230219_Sun_Alex.txt", sep = "\t", quote="")
+aj20230220 <- read.table("https://github.com/Fudge/infowars/raw/main/20230220_Mon_Alex.txt", sep = "\t", quote="")
+aj20230221 <- read.table("https://github.com/Fudge/infowars/raw/main/20230221_Tue_Alex.txt", sep = "\t", quote="")
+aj20230222 <- read.table("https://github.com/Fudge/infowars/raw/main/20230222_Wed_Alex.txt", sep = "\t", quote="")
+aj20230223 <- read.table("https://github.com/Fudge/infowars/raw/main/20230223_Thu_Alex.txt", sep = "\t", quote="")
+aj20230224 <- read.table("https://github.com/Fudge/infowars/raw/main/20230224_Fri_Alex.txt", sep = "\t", quote="")
+aj20230226 <- read.table("https://github.com/Fudge/infowars/raw/main/20230226_Sun_Alex.txt", sep = "\t", quote="")
+aj20230227 <- read.table("https://github.com/Fudge/infowars/raw/main/20230227_Mon_Alex.txt", sep = "\t", quote="")
+aj20230228 <- read.table("https://github.com/Fudge/infowars/raw/main/20230228_Tue_Alex.txt", sep = "\t", quote="")
+aj20230301 <- read.table("https://github.com/Fudge/infowars/raw/main/20230301_Wed_Alex.txt", sep = "\t", quote="")
+aj20230302 <- read.table("https://github.com/Fudge/infowars/raw/main/20230302_Thu_Alex.txt", sep = "\t", quote="")
+
+```
+
+
+```{r Text}
+aj20021207$text <- str_extract(aj20021207$V1, "\\]\\s(.{1,})") %>% str_remove(., "\\]\\s\\s")
+aj20021031$text <- str_extract(aj20021031$V1, "\\]\\s(.{1,})") %>% str_remove(., "\\]\\s\\s")
+aj20021106$text <- str_extract(aj20021106$V1, "\\]\\s(.{1,})") %>% str_remove(., "\\]\\s\\s")
+aj20021122$text <- str_extract(aj20021122$V1, "\\]\\s(.{1,})") %>% str_remove(., "\\]\\s\\s")
+aj20021123$text <- str_extract(aj20021123$V1, "\\]\\s(.{1,})") %>% str_remove(., "\\]\\s\\s")
+aj20021128$text <- str_extract(aj20021128$V1, "\\]\\s(.{1,})") %>% str_remove(., "\\]\\s\\s")
+aj20021030$text <- str_extract(aj20021030$V1, "\\]\\s(.{1,})") %>% str_remove(., "\\]\\s\\s")
+aj20021104$text <- str_extract(aj20021104$V1, "\\]\\s(.{1,})") %>% str_remove(., "\\]\\s\\s")
+aj20021114$text <- str_extract(aj20021114$V1, "\\]\\s(.{1,})") %>% str_remove(., "\\]\\s\\s")
+aj20021121$text <- str_extract(aj20021121$V1, "\\]\\s(.{1,})") %>% str_remove(., "\\]\\s\\s")
+aj20021206$text <- str_extract(aj20021206$V1, "\\]\\s(.{1,})") %>% str_remove(., "\\]\\s\\s")
+aj20021105$text <- str_extract(aj20021105$V1, "\\]\\s(.{1,})") %>% str_remove(., "\\]\\s\\s")
+aj20021128$text <- str_extract(aj20021128$V1, "\\]\\s(.{1,})") %>% str_remove(., "\\]\\s\\s")
+aj20021207$text <- str_extract(aj20021207$V1, "\\]\\s(.{1,})") %>% str_remove(., "\\]\\s\\s")
+aj20021101$text <- str_extract(aj20021101$V1, "\\]\\s(.{1,})") %>% str_remove(., "\\]\\s\\s")
+aj20021123$text <- str_extract(aj20021123$V1, "\\]\\s(.{1,})") %>% str_remove(., "\\]\\s\\s")
+aj20021126$text <- str_extract(aj20021126$V1, "\\]\\s(.{1,})") %>% str_remove(., "\\]\\s\\s")
+aj20021126$text <- str_extract(aj20021126$V1, "\\]\\s(.{1,})") %>% str_remove(., "\\]\\s\\s")
+aj20021127$text <- str_extract(aj20021127$V1, "\\]\\s(.{1,})") %>% str_remove(., "\\]\\s\\s")
+aj20021128$text <- str_extract(aj20021128$V1, "\\]\\s(.{1,})") %>% str_remove(., "\\]\\s\\s")
+aj20200202$text <- str_extract(aj20200202$V1, "\\]\\s(.{1,})") %>% str_remove(., "\\]\\s\\s")
+aj20200203$text <- str_extract(aj20200203$V1, "\\]\\s(.{1,})") %>% str_remove(., "\\]\\s\\s")
+aj20200204$text <- str_extract(aj20200204$V1, "\\]\\s(.{1,})") %>% str_remove(., "\\]\\s\\s")
+aj20200205$text <- str_extract(aj20200205$V1, "\\]\\s(.{1,})") %>% str_remove(., "\\]\\s\\s")
+aj20200206$text <- str_extract(aj20200206$V1, "\\]\\s(.{1,})") %>% str_remove(., "\\]\\s\\s")
+aj20200207$text <- str_extract(aj20200207$V1, "\\]\\s(.{1,})") %>% str_remove(., "\\]\\s\\s")
+aj20200209$text <- str_extract(aj20200209$V1, "\\]\\s(.{1,})") %>% str_remove(., "\\]\\s\\s")
+aj20200210$text <- str_extract(aj20200210$V1, "\\]\\s(.{1,})") %>% str_remove(., "\\]\\s\\s")
+aj20200211$text <- str_extract(aj20200211$V1, "\\]\\s(.{1,})") %>% str_remove(., "\\]\\s\\s")
+aj20200212$text <- str_extract(aj20200212$V1, "\\]\\s(.{1,})") %>% str_remove(., "\\]\\s\\s")
+aj20200213$text <- str_extract(aj20200213$V1, "\\]\\s(.{1,})") %>% str_remove(., "\\]\\s\\s")
+aj20200214$text <- str_extract(aj20200214$V1, "\\]\\s(.{1,})") %>% str_remove(., "\\]\\s\\s")
+aj20200216$text <- str_extract(aj20200216$V1, "\\]\\s(.{1,})") %>% str_remove(., "\\]\\s\\s")
+aj20200217$text <- str_extract(aj20200217$V1, "\\]\\s(.{1,})") %>% str_remove(., "\\]\\s\\s")
+aj20200218$text <- str_extract(aj20200218$V1, "\\]\\s(.{1,})") %>% str_remove(., "\\]\\s\\s")
+aj20200219$text <- str_extract(aj20200219$V1, "\\]\\s(.{1,})") %>% str_remove(., "\\]\\s\\s")
+aj20200220$text <- str_extract(aj20200220$V1, "\\]\\s(.{1,})") %>% str_remove(., "\\]\\s\\s")
+aj20200221$text <- str_extract(aj20200221$V1, "\\]\\s(.{1,})") %>% str_remove(., "\\]\\s\\s")
+aj20200224$text <- str_extract(aj20200224$V1, "\\]\\s(.{1,})") %>% str_remove(., "\\]\\s\\s")
+aj20200225$text <- str_extract(aj20200225$V1, "\\]\\s(.{1,})") %>% str_remove(., "\\]\\s\\s")
+aj20200226$text <- str_extract(aj20200226$V1, "\\]\\s(.{1,})") %>% str_remove(., "\\]\\s\\s")
+aj20200227$text <- str_extract(aj20200227$V1, "\\]\\s(.{1,})") %>% str_remove(., "\\]\\s\\s")
+aj20200228$text <- str_extract(aj20200228$V1, "\\]\\s(.{1,})") %>% str_remove(., "\\]\\s\\s")
+aj20040204$text <- str_extract(aj20040204$V1, "\\]\\s(.{1,})") %>% str_remove(., "\\]\\s\\s")
+aj20041214$text <- str_extract(aj20041214$V1, "\\]\\s(.{1,})") %>% str_remove(., "\\]\\s\\s")
+aj20061206$text <- str_extract(aj20061206$V1, "\\]\\s(.{1,})") %>% str_remove(., "\\]\\s\\s")
+aj20061217$text <- str_extract(aj20061217$V1, "\\]\\s(.{1,})") %>% str_remove(., "\\]\\s\\s")
+aj20061219$text <- str_extract(aj20061219$V1, "\\]\\s(.{1,})") %>% str_remove(., "\\]\\s\\s")
+aj20070205$text <- str_extract(aj20070205$V1, "\\]\\s(.{1,})") %>% str_remove(., "\\]\\s\\s")
+aj20070210$text <- str_extract(aj20070210$V1, "\\]\\s(.{1,})") %>% str_remove(., "\\]\\s\\s")
+aj20070225$text <- str_extract(aj20070225$V1, "\\]\\s(.{1,})") %>% str_remove(., "\\]\\s\\s")
+aj20070226$text <- str_extract(aj20070226$V1, "\\]\\s(.{1,})") %>% str_remove(., "\\]\\s\\s")
+aj20070227$text <- str_extract(aj20070227$V1, "\\]\\s(.{1,})") %>% str_remove(., "\\]\\s\\s")
+aj20130507$text <- str_extract(aj20130507$V1, "\\]\\s(.{1,})") %>% str_remove(., "\\]\\s\\s")
+aj20130101$text <- str_extract(aj20130101$V1, "\\]\\s(.{1,})") %>% str_remove(., "\\]\\s\\s")
+aj20130102$text <- str_extract(aj20130102$V1, "\\]\\s(.{1,})") %>% str_remove(., "\\]\\s\\s")
+aj20130103$text <- str_extract(aj20130103$V1, "\\]\\s(.{1,})") %>% str_remove(., "\\]\\s\\s")
+aj20130104$text <- str_extract(aj20130104$V1, "\\]\\s(.{1,})") %>% str_remove(., "\\]\\s\\s")
+aj20130106$text <- str_extract(aj20130106$V1, "\\]\\s(.{1,})") %>% str_remove(., "\\]\\s\\s")
+aj20130107$text <- str_extract(aj20130107$V1, "\\]\\s(.{1,})") %>% str_remove(., "\\]\\s\\s")
+aj20130108$text <- str_extract(aj20130108$V1, "\\]\\s(.{1,})") %>% str_remove(., "\\]\\s\\s")
+aj20130109$text <- str_extract(aj20130109$V1, "\\]\\s(.{1,})") %>% str_remove(., "\\]\\s\\s")
+aj20130110$text <- str_extract(aj20130110$V1, "\\]\\s(.{1,})") %>% str_remove(., "\\]\\s\\s")
+aj20130111$text <- str_extract(aj20130111$V1, "\\]\\s(.{1,})") %>% str_remove(., "\\]\\s\\s")
+aj20130113$text <- str_extract(aj20130113$V1, "\\]\\s(.{1,})") %>% str_remove(., "\\]\\s\\s")
+aj20130114$text <- str_extract(aj20130114$V1, "\\]\\s(.{1,})") %>% str_remove(., "\\]\\s\\s")
+aj20130115$text <- str_extract(aj20130115$V1, "\\]\\s(.{1,})") %>% str_remove(., "\\]\\s\\s")
+aj20130116$text <- str_extract(aj20130116$V1, "\\]\\s(.{1,})") %>% str_remove(., "\\]\\s\\s")
+aj20130117$text <- str_extract(aj20130117$V1, "\\]\\s(.{1,})") %>% str_remove(., "\\]\\s\\s")
+aj20130118$text <- str_extract(aj20130118$V1, "\\]\\s(.{1,})") %>% str_remove(., "\\]\\s\\s")
+aj20130120$text <- str_extract(aj20130120$V1, "\\]\\s(.{1,})") %>% str_remove(., "\\]\\s\\s")
+aj20130121$text <- str_extract(aj20130121$V1, "\\]\\s(.{1,})") %>% str_remove(., "\\]\\s\\s")
+aj20130122$text <- str_extract(aj20130122$V1, "\\]\\s(.{1,})") %>% str_remove(., "\\]\\s\\s")
+aj20130123$text <- str_extract(aj20130123$V1, "\\]\\s(.{1,})") %>% str_remove(., "\\]\\s\\s")
+aj20130124$text <- str_extract(aj20130124$V1, "\\]\\s(.{1,})") %>% str_remove(., "\\]\\s\\s")
+aj20130125$text <- str_extract(aj20130125$V1, "\\]\\s(.{1,})") %>% str_remove(., "\\]\\s\\s")
+aj20130127$text <- str_extract(aj20130127$V1, "\\]\\s(.{1,})") %>% str_remove(., "\\]\\s\\s")
+aj20130128$text <- str_extract(aj20130128$V1, "\\]\\s(.{1,})") %>% str_remove(., "\\]\\s\\s")
+aj20130129$text <- str_extract(aj20130129$V1, "\\]\\s(.{1,})") %>% str_remove(., "\\]\\s\\s")
+aj20130130$text <- str_extract(aj20130130$V1, "\\]\\s(.{1,})") %>% str_remove(., "\\]\\s\\s")
+aj20130131$text <- str_extract(aj20130131$V1, "\\]\\s(.{1,})") %>% str_remove(., "\\]\\s\\s")
+aj20130201$text <- str_extract(aj20130201$V1, "\\]\\s(.{1,})") %>% str_remove(., "\\]\\s\\s")
+aj20130203$text <- str_extract(aj20130203$V1, "\\]\\s(.{1,})") %>% str_remove(., "\\]\\s\\s")
+aj20130204$text <- str_extract(aj20130204$V1, "\\]\\s(.{1,})") %>% str_remove(., "\\]\\s\\s")
+aj20130205$text <- str_extract(aj20130205$V1, "\\]\\s(.{1,})") %>% str_remove(., "\\]\\s\\s")
+aj20130206$text <- str_extract(aj20130206$V1, "\\]\\s(.{1,})") %>% str_remove(., "\\]\\s\\s")
+aj20130207$text <- str_extract(aj20130207$V1, "\\]\\s(.{1,})") %>% str_remove(., "\\]\\s\\s")
+aj20130208$text <- str_extract(aj20130208$V1, "\\]\\s(.{1,})") %>% str_remove(., "\\]\\s\\s")
+aj20130210$text <- str_extract(aj20130210$V1, "\\]\\s(.{1,})") %>% str_remove(., "\\]\\s\\s")
+aj20130211$text <- str_extract(aj20130211$V1, "\\]\\s(.{1,})") %>% str_remove(., "\\]\\s\\s")
+aj20130212$text <- str_extract(aj20130212$V1, "\\]\\s(.{1,})") %>% str_remove(., "\\]\\s\\s")
+aj20130213$text <- str_extract(aj20130213$V1, "\\]\\s(.{1,})") %>% str_remove(., "\\]\\s\\s")
+aj20130214$text <- str_extract(aj20130214$V1, "\\]\\s(.{1,})") %>% str_remove(., "\\]\\s\\s")
+aj20130215$text <- str_extract(aj20130215$V1, "\\]\\s(.{1,})") %>% str_remove(., "\\]\\s\\s")
+aj20130217$text <- str_extract(aj20130217$V1, "\\]\\s(.{1,})") %>% str_remove(., "\\]\\s\\s")
+aj20130218$text <- str_extract(aj20130218$V1, "\\]\\s(.{1,})") %>% str_remove(., "\\]\\s\\s")
+aj20130219$text <- str_extract(aj20130219$V1, "\\]\\s(.{1,})") %>% str_remove(., "\\]\\s\\s")
+aj20130220$text <- str_extract(aj20130220$V1, "\\]\\s(.{1,})") %>% str_remove(., "\\]\\s\\s")
+aj20130221$text <- str_extract(aj20130221$V1, "\\]\\s(.{1,})") %>% str_remove(., "\\]\\s\\s")
+aj20130222$text <- str_extract(aj20130222$V1, "\\]\\s(.{1,})") %>% str_remove(., "\\]\\s\\s")
+aj20130224$text <- str_extract(aj20130224$V1, "\\]\\s(.{1,})") %>% str_remove(., "\\]\\s\\s")
+aj20130225$text <- str_extract(aj20130225$V1, "\\]\\s(.{1,})") %>% str_remove(., "\\]\\s\\s")
+aj20130226$text <- str_extract(aj20130226$V1, "\\]\\s(.{1,})") %>% str_remove(., "\\]\\s\\s")
+aj20130227$text <- str_extract(aj20130227$V1, "\\]\\s(.{1,})") %>% str_remove(., "\\]\\s\\s")
+aj20130228$text <- str_extract(aj20130228$V1, "\\]\\s(.{1,})") %>% str_remove(., "\\]\\s\\s")
+aj20130301$text <- str_extract(aj20130301$V1, "\\]\\s(.{1,})") %>% str_remove(., "\\]\\s\\s")
+aj20160101$text <- str_extract(aj20160101$V1, "\\]\\s(.{1,})") %>% str_remove(., "\\]\\s\\s")
+aj20160103$text <- str_extract(aj20160103$V1, "\\]\\s(.{1,})") %>% str_remove(., "\\]\\s\\s")
+aj20160104$text <- str_extract(aj20160104$V1, "\\]\\s(.{1,})") %>% str_remove(., "\\]\\s\\s")
+aj20160105$text <- str_extract(aj20160105$V1, "\\]\\s(.{1,})") %>% str_remove(., "\\]\\s\\s")
+aj20160106$text <- str_extract(aj20160106$V1, "\\]\\s(.{1,})") %>% str_remove(., "\\]\\s\\s")
+aj20160107$text <- str_extract(aj20160107$V1, "\\]\\s(.{1,})") %>% str_remove(., "\\]\\s\\s")
+aj20160108$text <- str_extract(aj20160108$V1, "\\]\\s(.{1,})") %>% str_remove(., "\\]\\s\\s")
+aj20160110$text <- str_extract(aj20160110$V1, "\\]\\s(.{1,})") %>% str_remove(., "\\]\\s\\s")
+aj20160111$text <- str_extract(aj20160111$V1, "\\]\\s(.{1,})") %>% str_remove(., "\\]\\s\\s")
+aj20160112$text <- str_extract(aj20160112$V1, "\\]\\s(.{1,})") %>% str_remove(., "\\]\\s\\s")
+aj20160113$text <- str_extract(aj20160113$V1, "\\]\\s(.{1,})") %>% str_remove(., "\\]\\s\\s")
+aj20160114$text <- str_extract(aj20160114$V1, "\\]\\s(.{1,})") %>% str_remove(., "\\]\\s\\s")
+aj20160115$text <- str_extract(aj20160115$V1, "\\]\\s(.{1,})") %>% str_remove(., "\\]\\s\\s")
+aj20160117$text <- str_extract(aj20160117$V1, "\\]\\s(.{1,})") %>% str_remove(., "\\]\\s\\s")
+aj20160118$text <- str_extract(aj20160118$V1, "\\]\\s(.{1,})") %>% str_remove(., "\\]\\s\\s")
+aj20160119$text <- str_extract(aj20160119$V1, "\\]\\s(.{1,})") %>% str_remove(., "\\]\\s\\s")
+aj20160120$text <- str_extract(aj20160120$V1, "\\]\\s(.{1,})") %>% str_remove(., "\\]\\s\\s")
+aj20160121$text <- str_extract(aj20160121$V1, "\\]\\s(.{1,})") %>% str_remove(., "\\]\\s\\s")
+aj20160122$text <- str_extract(aj20160122$V1, "\\]\\s(.{1,})") %>% str_remove(., "\\]\\s\\s")
+aj20160124$text <- str_extract(aj20160124$V1, "\\]\\s(.{1,})") %>% str_remove(., "\\]\\s\\s")
+aj20160125$text <- str_extract(aj20160125$V1, "\\]\\s(.{1,})") %>% str_remove(., "\\]\\s\\s")
+aj20160126$text <- str_extract(aj20160126$V1, "\\]\\s(.{1,})") %>% str_remove(., "\\]\\s\\s")
+aj20160127$text <- str_extract(aj20160127$V1, "\\]\\s(.{1,})") %>% str_remove(., "\\]\\s\\s")
+aj20160128$text <- str_extract(aj20160128$V1, "\\]\\s(.{1,})") %>% str_remove(., "\\]\\s\\s")
+aj20160129$text <- str_extract(aj20160129$V1, "\\]\\s(.{1,})") %>% str_remove(., "\\]\\s\\s")
+aj20160131$text <- str_extract(aj20160131$V1, "\\]\\s(.{1,})") %>% str_remove(., "\\]\\s\\s")
+aj20160201$text <- str_extract(aj20160201$V1, "\\]\\s(.{1,})") %>% str_remove(., "\\]\\s\\s")
+aj20160202$text <- str_extract(aj20160202$V1, "\\]\\s(.{1,})") %>% str_remove(., "\\]\\s\\s")
+aj20160203$text <- str_extract(aj20160203$V1, "\\]\\s(.{1,})") %>% str_remove(., "\\]\\s\\s")
+aj20160204$text <- str_extract(aj20160204$V1, "\\]\\s(.{1,})") %>% str_remove(., "\\]\\s\\s")
+aj20160205$text <- str_extract(aj20160205$V1, "\\]\\s(.{1,})") %>% str_remove(., "\\]\\s\\s")
+aj20160207$text <- str_extract(aj20160207$V1, "\\]\\s(.{1,})") %>% str_remove(., "\\]\\s\\s")
+aj20160208$text <- str_extract(aj20160208$V1, "\\]\\s(.{1,})") %>% str_remove(., "\\]\\s\\s")
+aj20160209$text <- str_extract(aj20160209$V1, "\\]\\s(.{1,})") %>% str_remove(., "\\]\\s\\s")
+aj20160210$text <- str_extract(aj20160210$V1, "\\]\\s(.{1,})") %>% str_remove(., "\\]\\s\\s")
+aj20160211$text <- str_extract(aj20160211$V1, "\\]\\s(.{1,})") %>% str_remove(., "\\]\\s\\s")
+aj20160212$text <- str_extract(aj20160212$V1, "\\]\\s(.{1,})") %>% str_remove(., "\\]\\s\\s")
+aj20160214$text <- str_extract(aj20160214$V1, "\\]\\s(.{1,})") %>% str_remove(., "\\]\\s\\s")
+aj20160215$text <- str_extract(aj20160215$V1, "\\]\\s(.{1,})") %>% str_remove(., "\\]\\s\\s")
+aj20160216$text <- str_extract(aj20160216$V1, "\\]\\s(.{1,})") %>% str_remove(., "\\]\\s\\s")
+aj20160217$text <- str_extract(aj20160217$V1, "\\]\\s(.{1,})") %>% str_remove(., "\\]\\s\\s")
+aj20160218$text <- str_extract(aj20160218$V1, "\\]\\s(.{1,})") %>% str_remove(., "\\]\\s\\s")
+aj20160219$text <- str_extract(aj20160219$V1, "\\]\\s(.{1,})") %>% str_remove(., "\\]\\s\\s")
+aj20160221$text <- str_extract(aj20160221$V1, "\\]\\s(.{1,})") %>% str_remove(., "\\]\\s\\s")
+aj20160222$text <- str_extract(aj20160222$V1, "\\]\\s(.{1,})") %>% str_remove(., "\\]\\s\\s")
+aj20160223$text <- str_extract(aj20160223$V1, "\\]\\s(.{1,})") %>% str_remove(., "\\]\\s\\s")
+aj20160224$text <- str_extract(aj20160224$V1, "\\]\\s(.{1,})") %>% str_remove(., "\\]\\s\\s")
+aj20160225$text <- str_extract(aj20160225$V1, "\\]\\s(.{1,})") %>% str_remove(., "\\]\\s\\s")
+aj20160226$text <- str_extract(aj20160226$V1, "\\]\\s(.{1,})") %>% str_remove(., "\\]\\s\\s")
+aj20160228$text <- str_extract(aj20160228$V1, "\\]\\s(.{1,})") %>% str_remove(., "\\]\\s\\s")
+aj20160229$text <- str_extract(aj20160229$V1, "\\]\\s(.{1,})") %>% str_remove(., "\\]\\s\\s")
+aj20160301$text <- str_extract(aj20160301$V1, "\\]\\s(.{1,})") %>% str_remove(., "\\]\\s\\s")
+aj20160302$text <- str_extract(aj20160302$V1, "\\]\\s(.{1,})") %>% str_remove(., "\\]\\s\\s")
+aj20220102$text <- str_extract(aj20220102$V1, "\\]\\s(.{1,})") %>% str_remove(., "\\]\\s\\s")
+aj20220103$text <- str_extract(aj20220103$V1, "\\]\\s(.{1,})") %>% str_remove(., "\\]\\s\\s")
+aj20220104$text <- str_extract(aj20220104$V1, "\\]\\s(.{1,})") %>% str_remove(., "\\]\\s\\s")
+aj20220105$text <- str_extract(aj20220105$V1, "\\]\\s(.{1,})") %>% str_remove(., "\\]\\s\\s")
+aj20220106$text <- str_extract(aj20220106$V1, "\\]\\s(.{1,})") %>% str_remove(., "\\]\\s\\s")
+aj20220107$text <- str_extract(aj20220107$V1, "\\]\\s(.{1,})") %>% str_remove(., "\\]\\s\\s")
+aj20220109$text <- str_extract(aj20220109$V1, "\\]\\s(.{1,})") %>% str_remove(., "\\]\\s\\s")
+aj20220110$text <- str_extract(aj20220110$V1, "\\]\\s(.{1,})") %>% str_remove(., "\\]\\s\\s")
+aj20220111$text <- str_extract(aj20220111$V1, "\\]\\s(.{1,})") %>% str_remove(., "\\]\\s\\s")
+aj20220112$text <- str_extract(aj20220112$V1, "\\]\\s(.{1,})") %>% str_remove(., "\\]\\s\\s")
+aj20220113$text <- str_extract(aj20220113$V1, "\\]\\s(.{1,})") %>% str_remove(., "\\]\\s\\s")
+aj20220114$text <- str_extract(aj20220114$V1, "\\]\\s(.{1,})") %>% str_remove(., "\\]\\s\\s")
+aj20220116$text <- str_extract(aj20220116$V1, "\\]\\s(.{1,})") %>% str_remove(., "\\]\\s\\s")
+aj20220117$text <- str_extract(aj20220117$V1, "\\]\\s(.{1,})") %>% str_remove(., "\\]\\s\\s")
+aj20220118$text <- str_extract(aj20220118$V1, "\\]\\s(.{1,})") %>% str_remove(., "\\]\\s\\s")
+aj20220119$text <- str_extract(aj20220119$V1, "\\]\\s(.{1,})") %>% str_remove(., "\\]\\s\\s")
+aj20220120$text <- str_extract(aj20220120$V1, "\\]\\s(.{1,})") %>% str_remove(., "\\]\\s\\s")
+aj20220121$text <- str_extract(aj20220121$V1, "\\]\\s(.{1,})") %>% str_remove(., "\\]\\s\\s")
+aj20220123$text <- str_extract(aj20220123$V1, "\\]\\s(.{1,})") %>% str_remove(., "\\]\\s\\s")
+aj20220124$text <- str_extract(aj20220124$V1, "\\]\\s(.{1,})") %>% str_remove(., "\\]\\s\\s")
+aj20220125$text <- str_extract(aj20220125$V1, "\\]\\s(.{1,})") %>% str_remove(., "\\]\\s\\s")
+aj20220126$text <- str_extract(aj20220126$V1, "\\]\\s(.{1,})") %>% str_remove(., "\\]\\s\\s")
+aj20220127$text <- str_extract(aj20220127$V1, "\\]\\s(.{1,})") %>% str_remove(., "\\]\\s\\s")
+aj20220128$text <- str_extract(aj20220128$V1, "\\]\\s(.{1,})") %>% str_remove(., "\\]\\s\\s")
+aj20220130$text <- str_extract(aj20220130$V1, "\\]\\s(.{1,})") %>% str_remove(., "\\]\\s\\s")
+aj20220131$text <- str_extract(aj20220131$V1, "\\]\\s(.{1,})") %>% str_remove(., "\\]\\s\\s")
+aj20220201$text <- str_extract(aj20220201$V1, "\\]\\s(.{1,})") %>% str_remove(., "\\]\\s\\s")
+aj20220202$text <- str_extract(aj20220202$V1, "\\]\\s(.{1,})") %>% str_remove(., "\\]\\s\\s")
+aj20220203$text <- str_extract(aj20220203$V1, "\\]\\s(.{1,})") %>% str_remove(., "\\]\\s\\s")
+aj20220204$text <- str_extract(aj20220204$V1, "\\]\\s(.{1,})") %>% str_remove(., "\\]\\s\\s")
+aj20220206$text <- str_extract(aj20220206$V1, "\\]\\s(.{1,})") %>% str_remove(., "\\]\\s\\s")
+aj20220207$text <- str_extract(aj20220207$V1, "\\]\\s(.{1,})") %>% str_remove(., "\\]\\s\\s")
+aj20220208$text <- str_extract(aj20220208$V1, "\\]\\s(.{1,})") %>% str_remove(., "\\]\\s\\s")
+aj20220209$text <- str_extract(aj20220209$V1, "\\]\\s(.{1,})") %>% str_remove(., "\\]\\s\\s")
+aj20220210$text <- str_extract(aj20220210$V1, "\\]\\s(.{1,})") %>% str_remove(., "\\]\\s\\s")
+aj20220211$text <- str_extract(aj20220211$V1, "\\]\\s(.{1,})") %>% str_remove(., "\\]\\s\\s")
+aj20220213$text <- str_extract(aj20220213$V1, "\\]\\s(.{1,})") %>% str_remove(., "\\]\\s\\s")
+aj20220214$text <- str_extract(aj20220214$V1, "\\]\\s(.{1,})") %>% str_remove(., "\\]\\s\\s")
+aj20220215$text <- str_extract(aj20220215$V1, "\\]\\s(.{1,})") %>% str_remove(., "\\]\\s\\s")
+aj20220216$text <- str_extract(aj20220216$V1, "\\]\\s(.{1,})") %>% str_remove(., "\\]\\s\\s")
+aj20220217$text <- str_extract(aj20220217$V1, "\\]\\s(.{1,})") %>% str_remove(., "\\]\\s\\s")
+aj20220218$text <- str_extract(aj20220218$V1, "\\]\\s(.{1,})") %>% str_remove(., "\\]\\s\\s")
+aj20220220$text <- str_extract(aj20220220$V1, "\\]\\s(.{1,})") %>% str_remove(., "\\]\\s\\s")
+aj20220221$text <- str_extract(aj20220221$V1, "\\]\\s(.{1,})") %>% str_remove(., "\\]\\s\\s")
+aj20220222$text <- str_extract(aj20220222$V1, "\\]\\s(.{1,})") %>% str_remove(., "\\]\\s\\s")
+aj20220223$text <- str_extract(aj20220223$V1, "\\]\\s(.{1,})") %>% str_remove(., "\\]\\s\\s")
+aj20220224$text <- str_extract(aj20220224$V1, "\\]\\s(.{1,})") %>% str_remove(., "\\]\\s\\s")
+aj20220225$text <- str_extract(aj20220225$V1, "\\]\\s(.{1,})") %>% str_remove(., "\\]\\s\\s")
+aj20220227$text <- str_extract(aj20220227$V1, "\\]\\s(.{1,})") %>% str_remove(., "\\]\\s\\s")
+aj20220228$text <- str_extract(aj20220228$V1, "\\]\\s(.{1,})") %>% str_remove(., "\\]\\s\\s")
+aj20230101$text <- str_extract(aj20230101$V1, "\\]\\s(.{1,})") %>% str_remove(., "\\]\\s\\s")
+aj20230102$text <- str_extract(aj20230102$V1, "\\]\\s(.{1,})") %>% str_remove(., "\\]\\s\\s")
+aj20230103$text <- str_extract(aj20230103$V1, "\\]\\s(.{1,})") %>% str_remove(., "\\]\\s\\s")
+aj20230104$text <- str_extract(aj20230104$V1, "\\]\\s(.{1,})") %>% str_remove(., "\\]\\s\\s")
+aj20230105$text <- str_extract(aj20230105$V1, "\\]\\s(.{1,})") %>% str_remove(., "\\]\\s\\s")
+aj20230106$text <- str_extract(aj20230106$V1, "\\]\\s(.{1,})") %>% str_remove(., "\\]\\s\\s")
+aj20230108$text <- str_extract(aj20230108$V1, "\\]\\s(.{1,})") %>% str_remove(., "\\]\\s\\s")
+aj20230109$text <- str_extract(aj20230109$V1, "\\]\\s(.{1,})") %>% str_remove(., "\\]\\s\\s")
+aj20230110$text <- str_extract(aj20230110$V1, "\\]\\s(.{1,})") %>% str_remove(., "\\]\\s\\s")
+aj20230111$text <- str_extract(aj20230111$V1, "\\]\\s(.{1,})") %>% str_remove(., "\\]\\s\\s")
+aj20230112$text <- str_extract(aj20230112$V1, "\\]\\s(.{1,})") %>% str_remove(., "\\]\\s\\s")
+aj20230113$text <- str_extract(aj20230113$V1, "\\]\\s(.{1,})") %>% str_remove(., "\\]\\s\\s")
+aj20230115$text <- str_extract(aj20230115$V1, "\\]\\s(.{1,})") %>% str_remove(., "\\]\\s\\s")
+aj20230116$text <- str_extract(aj20230116$V1, "\\]\\s(.{1,})") %>% str_remove(., "\\]\\s\\s")
+aj20230117$text <- str_extract(aj20230117$V1, "\\]\\s(.{1,})") %>% str_remove(., "\\]\\s\\s")
+aj20230118$text <- str_extract(aj20230118$V1, "\\]\\s(.{1,})") %>% str_remove(., "\\]\\s\\s")
+aj20230119$text <- str_extract(aj20230119$V1, "\\]\\s(.{1,})") %>% str_remove(., "\\]\\s\\s")
+aj20230120$text <- str_extract(aj20230120$V1, "\\]\\s(.{1,})") %>% str_remove(., "\\]\\s\\s")
+aj20230122$text <- str_extract(aj20230122$V1, "\\]\\s(.{1,})") %>% str_remove(., "\\]\\s\\s")
+aj20230123$text <- str_extract(aj20230123$V1, "\\]\\s(.{1,})") %>% str_remove(., "\\]\\s\\s")
+aj20230124$text <- str_extract(aj20230124$V1, "\\]\\s(.{1,})") %>% str_remove(., "\\]\\s\\s")
+aj20230125$text <- str_extract(aj20230125$V1, "\\]\\s(.{1,})") %>% str_remove(., "\\]\\s\\s")
+aj20230126$text <- str_extract(aj20230126$V1, "\\]\\s(.{1,})") %>% str_remove(., "\\]\\s\\s")
+aj20230127$text <- str_extract(aj20230127$V1, "\\]\\s(.{1,})") %>% str_remove(., "\\]\\s\\s")
+aj20230129$text <- str_extract(aj20230129$V1, "\\]\\s(.{1,})") %>% str_remove(., "\\]\\s\\s")
+aj20230130$text <- str_extract(aj20230130$V1, "\\]\\s(.{1,})") %>% str_remove(., "\\]\\s\\s")
+aj20230131$text <- str_extract(aj20230131$V1, "\\]\\s(.{1,})") %>% str_remove(., "\\]\\s\\s")
+aj20230201$text <- str_extract(aj20230201$V1, "\\]\\s(.{1,})") %>% str_remove(., "\\]\\s\\s")
+aj20230202$text <- str_extract(aj20230202$V1, "\\]\\s(.{1,})") %>% str_remove(., "\\]\\s\\s")
+aj20230203$text <- str_extract(aj20230203$V1, "\\]\\s(.{1,})") %>% str_remove(., "\\]\\s\\s")
+aj20230205$text <- str_extract(aj20230205$V1, "\\]\\s(.{1,})") %>% str_remove(., "\\]\\s\\s")
+aj20230206$text <- str_extract(aj20230206$V1, "\\]\\s(.{1,})") %>% str_remove(., "\\]\\s\\s")
+aj20230207$text <- str_extract(aj20230207$V1, "\\]\\s(.{1,})") %>% str_remove(., "\\]\\s\\s")
+aj20230208$text <- str_extract(aj20230208$V1, "\\]\\s(.{1,})") %>% str_remove(., "\\]\\s\\s")
+aj20230209$text <- str_extract(aj20230209$V1, "\\]\\s(.{1,})") %>% str_remove(., "\\]\\s\\s")
+aj20230210$text <- str_extract(aj20230210$V1, "\\]\\s(.{1,})") %>% str_remove(., "\\]\\s\\s")
+aj20230212$text <- str_extract(aj20230212$V1, "\\]\\s(.{1,})") %>% str_remove(., "\\]\\s\\s")
+aj20230213$text <- str_extract(aj20230213$V1, "\\]\\s(.{1,})") %>% str_remove(., "\\]\\s\\s")
+aj20230214$text <- str_extract(aj20230214$V1, "\\]\\s(.{1,})") %>% str_remove(., "\\]\\s\\s")
+aj20230215$text <- str_extract(aj20230215$V1, "\\]\\s(.{1,})") %>% str_remove(., "\\]\\s\\s")
+aj20230216$text <- str_extract(aj20230216$V1, "\\]\\s(.{1,})") %>% str_remove(., "\\]\\s\\s")
+aj20230217$text <- str_extract(aj20230217$V1, "\\]\\s(.{1,})") %>% str_remove(., "\\]\\s\\s")
+aj20230219$text <- str_extract(aj20230219$V1, "\\]\\s(.{1,})") %>% str_remove(., "\\]\\s\\s")
+aj20230220$text <- str_extract(aj20230220$V1, "\\]\\s(.{1,})") %>% str_remove(., "\\]\\s\\s")
+aj20230221$text <- str_extract(aj20230221$V1, "\\]\\s(.{1,})") %>% str_remove(., "\\]\\s\\s")
+aj20230222$text <- str_extract(aj20230222$V1, "\\]\\s(.{1,})") %>% str_remove(., "\\]\\s\\s")
+aj20230223$text <- str_extract(aj20230223$V1, "\\]\\s(.{1,})") %>% str_remove(., "\\]\\s\\s")
+aj20230224$text <- str_extract(aj20230224$V1, "\\]\\s(.{1,})") %>% str_remove(., "\\]\\s\\s")
+aj20230226$text <- str_extract(aj20230226$V1, "\\]\\s(.{1,})") %>% str_remove(., "\\]\\s\\s")
+aj20230227$text <- str_extract(aj20230227$V1, "\\]\\s(.{1,})") %>% str_remove(., "\\]\\s\\s")
+aj20230228$text <- str_extract(aj20230228$V1, "\\]\\s(.{1,})") %>% str_remove(., "\\]\\s\\s")
+aj20230301$text <- str_extract(aj20230301$V1, "\\]\\s(.{1,})") %>% str_remove(., "\\]\\s\\s")
+aj20230302$text <- str_extract(aj20230302$V1, "\\]\\s(.{1,})") %>% str_remove(., "\\]\\s\\s")
+```
+
+
+```{r Date}
+aj20021207$date <- as.Date("2002-12-07")
+aj20021031$date <- as.Date("2002-10-31")
+aj20021106$date <- as.Date("2002-11-06")
+aj20021122$date <- as.Date("2002-11-22")
+aj20021123$date <- as.Date("2002-11-23")
+aj20021128$date <- as.Date("2002-11-28")
+aj20021030$date <- as.Date("2002-10-30")
+aj20021104$date <- as.Date("2002-11-04")
+aj20021114$date <- as.Date("2002-11-14")
+aj20021121$date <- as.Date("2002-11-21")
+aj20021206$date <- as.Date("2002-12-06")
+aj20021105$date <- as.Date("2002-11-05")
+aj20021128$date <- as.Date("2002-11-28")
+aj20021207$date <- as.Date("2002-12-07")
+aj20021101$date <- as.Date("2002-11-01")
+aj20021123$date <- as.Date("2002-11-23")
+aj20021126$date <- as.Date("2002-11-26")
+aj20021126$date <- as.Date("2002-11-26")
+aj20021127$date <- as.Date("2002-11-27")
+aj20021128$date <- as.Date("2002-11-28")
+aj20200202$date <- as.Date("2020-02-02")
+aj20200203$date <- as.Date("2020-02-03")
+aj20200204$date <- as.Date("2020-02-04")
+aj20200205$date <- as.Date("2020-02-05")
+aj20200206$date <- as.Date("2020-02-06")
+aj20200207$date <- as.Date("2020-02-07")
+aj20200209$date <- as.Date("2020-02-09")
+aj20200210$date <- as.Date("2020-02-10")
+aj20200211$date <- as.Date("2020-02-11")
+aj20200212$date <- as.Date("2020-02-12")
+aj20200213$date <- as.Date("2020-02-13")
+aj20200214$date <- as.Date("2020-02-14")
+aj20200216$date <- as.Date("2020-02-16")
+aj20200217$date <- as.Date("2020-02-17")
+aj20200218$date <- as.Date("2020-02-18")
+aj20200219$date <- as.Date("2020-02-19")
+aj20200220$date <- as.Date("2020-02-20")
+aj20200221$date <- as.Date("2020-02-21")
+aj20200224$date <- as.Date("2020-02-24")
+aj20200225$date <- as.Date("2020-02-25")
+aj20200226$date <- as.Date("2020-02-26")
+aj20200227$date <- as.Date("2020-02-27")
+aj20200228$date <- as.Date("2020-02-28")
+aj20040204$date <- as.Date("2004-02-04")
+aj20041214$date <- as.Date("2004-12-14")
+aj20061206$date <- as.Date("2006-12-06")
+aj20061217$date <- as.Date("2006-12-17")
+aj20061219$date <- as.Date("2006-12-19")
+aj20070205$date <- as.Date("2007-02-05")
+aj20070210$date <- as.Date("2007-02-10")
+aj20070225$date <- as.Date("2007-02-25")
+aj20070226$date <- as.Date("2007-02-26")
+aj20070227$date <- as.Date("2007-02-27")
+aj20130507$date <- as.Date("2013-05-07")
+aj20130101$date <- as.Date("2013-01-01")
+aj20130102$date <- as.Date("2013-01-02")
+aj20130103$date <- as.Date("2013-01-03")
+aj20130104$date <- as.Date("2013-01-04")
+aj20130106$date <- as.Date("2013-01-06")
+aj20130107$date <- as.Date("2013-01-07")
+aj20130108$date <- as.Date("2013-01-08")
+aj20130109$date <- as.Date("2013-01-09")
+aj20130110$date <- as.Date("2013-01-10")
+aj20130111$date <- as.Date("2013-01-11")
+aj20130113$date <- as.Date("2013-01-13")
+aj20130114$date <- as.Date("2013-01-14")
+aj20130115$date <- as.Date("2013-01-15")
+aj20130116$date <- as.Date("2013-01-16")
+aj20130117$date <- as.Date("2013-01-17")
+aj20130118$date <- as.Date("2013-01-18")
+aj20130120$date <- as.Date("2013-01-20")
+aj20130121$date <- as.Date("2013-01-21")
+aj20130122$date <- as.Date("2013-01-22")
+aj20130123$date <- as.Date("2013-01-23")
+aj20130124$date <- as.Date("2013-01-24")
+aj20130125$date <- as.Date("2013-01-25")
+aj20130127$date <- as.Date("2013-01-27")
+aj20130128$date <- as.Date("2013-01-28")
+aj20130129$date <- as.Date("2013-01-29")
+aj20130130$date <- as.Date("2013-01-30")
+aj20130131$date <- as.Date("2013-01-31")
+aj20130201$date <- as.Date("2013-02-01")
+aj20130203$date <- as.Date("2013-02-03")
+aj20130204$date <- as.Date("2013-02-04")
+aj20130205$date <- as.Date("2013-02-05")
+aj20130206$date <- as.Date("2013-02-06")
+aj20130207$date <- as.Date("2013-02-07")
+aj20130208$date <- as.Date("2013-02-08")
+aj20130210$date <- as.Date("2013-02-10")
+aj20130211$date <- as.Date("2013-02-11")
+aj20130212$date <- as.Date("2013-02-12")
+aj20130213$date <- as.Date("2013-02-13")
+aj20130214$date <- as.Date("2013-02-14")
+aj20130215$date <- as.Date("2013-02-15")
+aj20130217$date <- as.Date("2013-02-17")
+aj20130218$date <- as.Date("2013-02-18")
+aj20130219$date <- as.Date("2013-02-19")
+aj20130220$date <- as.Date("2013-02-20")
+aj20130221$date <- as.Date("2013-02-21")
+aj20130222$date <- as.Date("2013-02-22")
+aj20130224$date <- as.Date("2013-02-24")
+aj20130225$date <- as.Date("2013-02-25")
+aj20130226$date <- as.Date("2013-02-26")
+aj20130227$date <- as.Date("2013-02-27")
+aj20130228$date <- as.Date("2013-02-28")
+aj20130301$date <- as.Date("2013-03-01")
+aj20160101$date <- as.Date("2016-01-01")
+aj20160103$date <- as.Date("2016-01-03")
+aj20160104$date <- as.Date("2016-01-04")
+aj20160105$date <- as.Date("2016-01-05")
+aj20160106$date <- as.Date("2016-01-06")
+aj20160107$date <- as.Date("2016-01-07")
+aj20160108$date <- as.Date("2016-01-08")
+aj20160110$date <- as.Date("2016-01-10")
+aj20160111$date <- as.Date("2016-01-11")
+aj20160112$date <- as.Date("2016-01-12")
+aj20160113$date <- as.Date("2016-01-13")
+aj20160114$date <- as.Date("2016-01-14")
+aj20160115$date <- as.Date("2016-01-15")
+aj20160117$date <- as.Date("2016-01-17")
+aj20160118$date <- as.Date("2016-01-18")
+aj20160119$date <- as.Date("2016-01-19")
+aj20160120$date <- as.Date("2016-01-20")
+aj20160121$date <- as.Date("2016-01-21")
+aj20160122$date <- as.Date("2016-01-22")
+aj20160124$date <- as.Date("2016-01-24")
+aj20160125$date <- as.Date("2016-01-25")
+aj20160126$date <- as.Date("2016-01-26")
+aj20160127$date <- as.Date("2016-01-27")
+aj20160128$date <- as.Date("2016-01-28")
+aj20160129$date <- as.Date("2016-01-29")
+aj20160131$date <- as.Date("2016-01-31")
+aj20160201$date <- as.Date("2016-02-01")
+aj20160202$date <- as.Date("2016-02-02")
+aj20160203$date <- as.Date("2016-02-03")
+aj20160204$date <- as.Date("2016-02-04")
+aj20160205$date <- as.Date("2016-02-05")
+aj20160207$date <- as.Date("2016-02-07")
+aj20160208$date <- as.Date("2016-02-08")
+aj20160209$date <- as.Date("2016-02-09")
+aj20160210$date <- as.Date("2016-02-10")
+aj20160211$date <- as.Date("2016-02-11")
+aj20160212$date <- as.Date("2016-02-12")
+aj20160214$date <- as.Date("2016-02-14")
+aj20160215$date <- as.Date("2016-02-15")
+aj20160216$date <- as.Date("2016-02-16")
+aj20160217$date <- as.Date("2016-02-17")
+aj20160218$date <- as.Date("2016-02-18")
+aj20160219$date <- as.Date("2016-02-19")
+aj20160221$date <- as.Date("2016-02-21")
+aj20160222$date <- as.Date("2016-02-22")
+aj20160223$date <- as.Date("2016-02-23")
+aj20160224$date <- as.Date("2016-02-24")
+aj20160225$date <- as.Date("2016-02-25")
+aj20160226$date <- as.Date("2016-02-26")
+aj20160228$date <- as.Date("2016-02-28")
+aj20160229$date <- as.Date("2016-02-29")
+aj20160301$date <- as.Date("2016-03-01")
+aj20160302$date <- as.Date("2016-03-02")
+aj20220102$date <- as.Date("2022-01-02")
+aj20220103$date <- as.Date("2022-01-03")
+aj20220104$date <- as.Date("2022-01-04")
+aj20220105$date <- as.Date("2022-01-05")
+aj20220106$date <- as.Date("2022-01-06")
+aj20220107$date <- as.Date("2022-01-07")
+aj20220109$date <- as.Date("2022-01-09")
+aj20220110$date <- as.Date("2022-01-10")
+aj20220111$date <- as.Date("2022-01-11")
+aj20220112$date <- as.Date("2022-01-12")
+aj20220113$date <- as.Date("2022-01-13")
+aj20220114$date <- as.Date("2022-01-14")
+aj20220116$date <- as.Date("2022-01-16")
+aj20220117$date <- as.Date("2022-01-17")
+aj20220118$date <- as.Date("2022-01-18")
+aj20220119$date <- as.Date("2022-01-19")
+aj20220120$date <- as.Date("2022-01-20")
+aj20220121$date <- as.Date("2022-01-21")
+aj20220123$date <- as.Date("2022-01-23")
+aj20220124$date <- as.Date("2022-01-24")
+aj20220125$date <- as.Date("2022-01-25")
+aj20220126$date <- as.Date("2022-01-26")
+aj20220127$date <- as.Date("2022-01-27")
+aj20220128$date <- as.Date("2022-01-28")
+aj20220130$date <- as.Date("2022-01-30")
+aj20220131$date <- as.Date("2022-01-31")
+aj20220201$date <- as.Date("2022-02-01")
+aj20220202$date <- as.Date("2022-02-02")
+aj20220203$date <- as.Date("2022-02-03")
+aj20220204$date <- as.Date("2022-02-04")
+aj20220206$date <- as.Date("2022-02-06")
+aj20220207$date <- as.Date("2022-02-07")
+aj20220208$date <- as.Date("2022-02-08")
+aj20220209$date <- as.Date("2022-02-09")
+aj20220210$date <- as.Date("2022-02-10")
+aj20220211$date <- as.Date("2022-02-11")
+aj20220213$date <- as.Date("2022-02-13")
+aj20220214$date <- as.Date("2022-02-14")
+aj20220215$date <- as.Date("2022-02-15")
+aj20220216$date <- as.Date("2022-02-16")
+aj20220217$date <- as.Date("2022-02-17")
+aj20220218$date <- as.Date("2022-02-18")
+aj20220220$date <- as.Date("2022-02-20")
+aj20220221$date <- as.Date("2022-02-21")
+aj20220222$date <- as.Date("2022-02-22")
+aj20220223$date <- as.Date("2022-02-23")
+aj20220224$date <- as.Date("2022-02-24")
+aj20220225$date <- as.Date("2022-02-25")
+aj20220227$date <- as.Date("2022-02-27")
+aj20220228$date <- as.Date("2022-02-28")
+aj20230101$date <- as.Date("2023-01-01")
+aj20230102$date <- as.Date("2023-01-02")
+aj20230103$date <- as.Date("2023-01-03")
+aj20230104$date <- as.Date("2023-01-04")
+aj20230105$date <- as.Date("2023-01-05")
+aj20230106$date <- as.Date("2023-01-06")
+aj20230108$date <- as.Date("2023-01-08")
+aj20230109$date <- as.Date("2023-01-09")
+aj20230110$date <- as.Date("2023-01-10")
+aj20230111$date <- as.Date("2023-01-11")
+aj20230112$date <- as.Date("2023-01-12")
+aj20230113$date <- as.Date("2023-01-13")
+aj20230115$date <- as.Date("2023-01-15")
+aj20230116$date <- as.Date("2023-01-16")
+aj20230117$date <- as.Date("2023-01-17")
+aj20230118$date <- as.Date("2023-01-18")
+aj20230119$date <- as.Date("2023-01-19")
+aj20230120$date <- as.Date("2023-01-20")
+aj20230122$date <- as.Date("2023-01-22")
+aj20230123$date <- as.Date("2023-01-23")
+aj20230124$date <- as.Date("2023-01-24")
+aj20230125$date <- as.Date("2023-01-25")
+aj20230126$date <- as.Date("2023-01-26")
+aj20230127$date <- as.Date("2023-01-27")
+aj20230129$date <- as.Date("2023-01-29")
+aj20230130$date <- as.Date("2023-01-30")
+aj20230131$date <- as.Date("2023-01-31")
+aj20230201$date <- as.Date("2023-02-01")
+aj20230202$date <- as.Date("2023-02-02")
+aj20230203$date <- as.Date("2023-02-03")
+aj20230205$date <- as.Date("2023-02-05")
+aj20230206$date <- as.Date("2023-02-06")
+aj20230207$date <- as.Date("2023-02-07")
+aj20230208$date <- as.Date("2023-02-08")
+aj20230209$date <- as.Date("2023-02-09")
+aj20230210$date <- as.Date("2023-02-10")
+aj20230212$date <- as.Date("2023-02-12")
+aj20230213$date <- as.Date("2023-02-13")
+aj20230214$date <- as.Date("2023-02-14")
+aj20230215$date <- as.Date("2023-02-15")
+aj20230216$date <- as.Date("2023-02-16")
+aj20230217$date <- as.Date("2023-02-17")
+aj20230219$date <- as.Date("2023-02-19")
+aj20230220$date <- as.Date("2023-02-20")
+aj20230221$date <- as.Date("2023-02-21")
+aj20230222$date <- as.Date("2023-02-22")
+aj20230223$date <- as.Date("2023-02-23")
+aj20230224$date <- as.Date("2023-02-24")
+aj20230226$date <- as.Date("2023-02-26")
+aj20230227$date <- as.Date("2023-02-27")
+aj20230228$date <- as.Date("2023-02-28")
+aj20230301$date <- as.Date("2023-03-01")
+aj20230302$date <- as.Date("2023-03-02")
+```
+
+```{r Single Dataset}
+aj <- do.call(rbind, list(aj20021207, aj20021031,
+aj20021106,
+aj20021122,
+aj20021123,
+aj20021128,
+aj20021030,
+aj20021104,
+aj20021114,
+aj20021121,
+aj20021206,
+aj20021105,
+aj20021128,
+aj20021207,
+aj20021101,
+aj20021123,
+aj20021126,
+aj20021126,
+aj20021127,
+aj20021128,
+aj20200202,
+aj20200203,
+aj20200204,
+aj20200205,
+aj20200206,
+aj20200207,
+aj20200209,
+aj20200210,
+aj20200211,
+aj20200212,
+aj20200213,
+aj20200214,
+aj20200216,
+aj20200217,
+aj20200218,
+aj20200219,
+aj20200220,
+aj20200221,
+aj20200224,
+aj20200225,
+aj20200226,
+aj20200227,
+aj20200228,
+aj20040204,
+aj20041214,
+aj20061206,
+aj20061217,
+aj20061219,
+aj20070205,
+aj20070210,
+aj20070225,
+aj20070226,
+aj20070227,
+aj20130507,
+aj20130101,
+aj20130102,
+aj20130103,
+aj20130104,
+aj20130106,
+aj20130107,
+aj20130108,
+aj20130109,
+aj20130110,
+aj20130111,
+aj20130113,
+aj20130114,
+aj20130115,
+aj20130116,
+aj20130117,
+aj20130118,
+aj20130120,
+aj20130121,
+aj20130122,
+aj20130123,
+aj20130124,
+aj20130125,
+aj20130127,
+aj20130128,
+aj20130129,
+aj20130130,
+aj20130131,
+aj20130201,
+aj20130203,
+aj20130204,
+aj20130205,
+aj20130206,
+aj20130207,
+aj20130208,
+aj20130210,
+aj20130211,
+aj20130212,
+aj20130213,
+aj20130214,
+aj20130215,
+aj20130217,
+aj20130218,
+aj20130219,
+aj20130220,
+aj20130221,
+aj20130222,
+aj20130224,
+aj20130225,
+aj20130226,
+aj20130227,
+aj20130228,
+aj20130301,
+aj20160101,
+aj20160103,
+aj20160104,
+aj20160105,
+aj20160106,
+aj20160107,
+aj20160108,
+aj20160110,
+aj20160111,
+aj20160112,
+aj20160113,
+aj20160114,
+aj20160115,
+aj20160117,
+aj20160118,
+aj20160119,
+aj20160120,
+aj20160121,
+aj20160122,
+aj20160124,
+aj20160125,
+aj20160126,
+aj20160127,
+aj20160128,
+aj20160129,
+aj20160131,
+aj20160201,
+aj20160202,
+aj20160203,
+aj20160204,
+aj20160205,
+aj20160207,
+aj20160208,
+aj20160209,
+aj20160210,
+aj20160211,
+aj20160212,
+aj20160214,
+aj20160215,
+aj20160216,
+aj20160217,
+aj20160218,
+aj20160219,
+aj20160221,
+aj20160222,
+aj20160223,
+aj20160224,
+aj20160225,
+aj20160226,
+aj20160228,
+aj20160229,
+aj20160301,
+aj20160302,
+aj20220102,
+aj20220103,
+aj20220104,
+aj20220105,
+aj20220106,
+aj20220107,
+aj20220109,
+aj20220110,
+aj20220111,
+aj20220112,
+aj20220113,
+aj20220114,
+aj20220116,
+aj20220117,
+aj20220118,
+aj20220119,
+aj20220120,
+aj20220121,
+aj20220123,
+aj20220124,
+aj20220125,
+aj20220126,
+aj20220127,
+aj20220128,
+aj20220130,
+aj20220131,
+aj20220201,
+aj20220202,
+aj20220203,
+aj20220204,
+aj20220206,
+aj20220207,
+aj20220208,
+aj20220209,
+aj20220210,
+aj20220211,
+aj20220213,
+aj20220214,
+aj20220215,
+aj20220216,
+aj20220217,
+aj20220218,
+aj20220220,
+aj20220221,
+aj20220222,
+aj20220223,
+aj20220224,
+aj20220225,
+aj20220227,
+aj20220228,
+aj20230101,
+aj20230102,
+aj20230103,
+aj20230104,
+aj20230105,
+aj20230106,
+aj20230108,
+aj20230109,
+aj20230110,
+aj20230111,
+aj20230112,
+aj20230113,
+aj20230115,
+aj20230116,
+aj20230117,
+aj20230118,
+aj20230119,
+aj20230120,
+aj20230122,
+aj20230123,
+aj20230124,
+aj20230125,
+aj20230126,
+aj20230127,
+aj20230129,
+aj20230130,
+aj20230131,
+aj20230201,
+aj20230202,
+aj20230203,
+aj20230205,
+aj20230206,
+aj20230207,
+aj20230208,
+aj20230209,
+aj20230210,
+aj20230212,
+aj20230213,
+aj20230214,
+aj20230215,
+aj20230216,
+aj20230217,
+aj20230219,
+aj20230220,
+aj20230221,
+aj20230222,
+aj20230223,
+aj20230224,
+aj20230226,
+aj20230227,
+aj20230228,
+aj20230301,
+aj20230302))
+```
+
+```{r}
+aj <- aj[, 2:3]
+
+```
+
