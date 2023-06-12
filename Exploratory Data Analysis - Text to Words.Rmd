@@ -1,13 +1,21 @@
 ---
 title: "Alex Jones - EDA"
 author: "Karyn Brehmeyer"
-date: '`r Sys.Date()`'
-output: html_document
+date: "`r Sys.Date()`"
+output:
+  pdf_document: default
+  html_document: default
 ---
 
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = TRUE)
 knitr::opts_knit$set(root.dir = ".")
+
+library(tidyverse)
+library(tidytext)
+library(tidylo)
+library(wordcloud)
+
 
 #import aj file from data pull markdown
 
@@ -22,10 +30,6 @@ aj <- read_csv("aj.csv")
 
 aj = aj %>% mutate(ep_date = as.character(date), date, text)
 
-library(tidyverse)
-library(tidytext)
-library(tidylo)
-library(wordcloud)
 
 
 #make list of words from the epsidoe text
