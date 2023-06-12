@@ -8,6 +8,8 @@ output: html_document
 ```{r setup, include=FALSE}
 library(tidyverse)
 library(stringr)
+knitr::opts_knit$set(root.dir = ".")
+
 ```
 
 
@@ -1083,6 +1085,10 @@ aj20230302))
 
 ```{r}
 aj <- aj[, 2:3]
+
+aj
+
+write_csv(aj, file = "C:\\Users\\karyn\\OneDrive\\Documents\\MSDS\\510 - Capstone\\Capstone Project Files\\aj.csv")
 
 ```
 
