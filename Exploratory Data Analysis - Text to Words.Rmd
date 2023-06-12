@@ -1,0 +1,214 @@
+---
+title: "Alex Jones - EDA"
+author: "Karyn Brehmeyer"
+date: '`r Sys.Date()`'
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+knitr::opts_knit$set(root.dir = ".")
+
+#import aj file from data pull markdown
+
+aj <- read_csv("aj.csv")
+
+```
+
+## Exploratory Data Analysis
+
+```{r, echo=FALSE}
+
+
+aj = aj %>% mutate(ep_date = as.character(date), date, text)
+
+library(tidyverse)
+library(tidytext)
+library(tidylo)
+library(wordcloud)
+
+
+#make list of words from the epsidoe text
+data(stop_words)
+
+regex_ify<-function(x){
+  x<-x[!is.na(x)]
+  step1<-paste0("[ |^]",x,"[| |$]")
+  step2<-paste0(step1,collapse="|")
+  return(step2)
+}
+
+#full list of words, case insensitive and remove punctuation
+all_aj_words<-data.frame(stringr::str_split(aj$text," ",simplify=T), date = aj$date, ep_date = aj$ep_date) %>% 
+  pivot_longer(c(-date,-ep_date), values_to="word") %>% 
+  mutate(word=tolower(word),
+         word=gsub("[[:punct:]]","",word)
+         ) %>% 
+  filter(word!="")
+
+#remove non-alpha words and remove stop words
+all_aj_words = 
+  all_aj_words %>%
+  filter(str_detect(string = word, pattern = "[a-z+]")) %>%  # get rid weird non alphas
+  anti_join(stop_words)
+
+#word summary by episode date
+word_summary_episode<-
+  all_aj_words %>% 
+  group_by(date) %>% 
+  summarise(
+    total_words_in_ep =n(),
+    unique_words_in_ep =n_distinct(word),
+  )
+
+#frequency analysis to identify words description of one episode but not others
+some_metrics<-
+  all_aj_words %>% 
+  group_by(word, date) %>% 
+  summarise(
+    count=n(),
+    eps=n_distinct(date)
+  ) %>% 
+  left_join(
+    word_summary_episode
+  ) %>% 
+  mutate(
+    metric_1=count/total_words_in_ep, #frequency that word appears relative to all words in episode
+    metric_2=eps/total_words_in_ep #frequency that episode with that word appear relative to all episodes
+  ) %>% 
+  group_by(word) %>% 
+  mutate(
+    metric_3=metric_2/sum(metric_2), #relative frequency that word appears in episode relative to other episodes
+    metric_4=eps/sum(eps) #if you used this word to guess this episode's date how often would you be right
+  )
+
+some_metrics = 
+some_metrics %>% 
+  mutate(ep_year = format(as.Date(date, format = "%d/%m/%Y"), "%Y"))
+  
+
+year_metrics = 
+some_metrics %>% 
+  group_by(ep_year, word) %>% 
+  summarize(
+    count = sum(count),
+    eps = sum(eps)
+  ) 
+
+```
+
+```{r test plots}
+
+#top 25 all time 
+year_metrics %>%
+  group_by(word) %>% 
+  summarise(word_count = sum(count)) %>% 
+  top_n(25, word_count) %>% 
+  mutate(work = reorder(word, word_count)) %>% 
+  ggplot(aes(work, word_count)) +
+  geom_col() +
+  xlab(NULL) +
+  coord_flip() +
+  labs(title = 'Word Frequency in the Alex Jones Show', subtitle = 'Sampling from 2002 to 2023', x = "Term", y = 'Word Count') +
+  theme_minimal()
+  
+
+#word cloud
+year_metrics %>% 
+  group_by(word) %>% 
+  summarise(word_count = sum(count)) %>% 
+  with(wordcloud(word, word_count, random.order = FALSE, max.words = 50))  
+
+#Top 20 words by count in each time period
+year_metrics %>% 
+  group_by(ep_year, word) %>%
+  summarise(word_count=sum(count)) %>% 
+  top_n(10, word_count) %>%
+  ungroup %>%
+  ggplot(aes(reorder_within(word, word_count, ep_year), word_count, fill = ep_year)) +
+    geom_col(show.legend = FALSE) +
+    scale_x_reordered() +
+    facet_wrap(~ep_year, scales = "free") +
+    coord_flip()+
+    labs(x = NULL, y="Word Counts")
+
+
+```
+
+```{r Newtown}
+
+#plots are skewed due to uneven sampling across years
+some_metrics %>% 
+  filter(word == "newtown") %>% 
+  group_by(ep_year) %>% 
+  summarize(
+    episode_count = n_distinct(date),
+    Newtown_term_count = sum(count)
+  ) %>% 
+  gather(key = "type", value = "count", 2:3) %>% 
+  ggplot(aes(ep_year, count)) + 
+  geom_point() + 
+  facet_wrap(~ type, scales = "free") +
+  labs(title = 'Frequency of Netwon Mentions', y = 'Count', x = 'Episode Year')
+
+
+some_metrics %>% 
+  filter(word == 'sandy') %>% 
+  group_by(ep_year) %>% 
+  summarize(
+    episode_count = n_distinct(date),
+    sandy_term_count = sum(count)
+  ) %>% 
+  gather(key = "type", value = "count", 2:3) %>% 
+  ggplot(aes(ep_year, count)) + 
+  geom_point() + 
+  facet_wrap(~ type, scales = "free") +
+  labs(title = 'Frequency of Sandy Mentions', y = 'Count', x = 'Episode Year')
+
+
+```
+
+```{r globalists}
+
+#plots are skewed due to uneven sampling across years
+some_metrics %>% 
+  filter(word == "globalist") %>% 
+  group_by(ep_year) %>% 
+  summarize(
+    episode_count = n_distinct(date),
+    Newtown_term_count = sum(count)
+  ) %>% 
+  gather(key = "type", value = "count", 2:3) %>% 
+  ggplot(aes(ep_year, count)) + 
+  geom_point() + 
+  facet_wrap(~ type, scales = "free") +
+  labs(title = 'Frequency of Globalist Mentions', y = 'Count', x = 'Episode Year')
+
+
+```
+
+```{r, warning=FALSE}
+library(scales)
+
+year_metrics %>% 
+    filter(ep_year == '2013' | ep_year == '2023') %>% #compare two years
+    filter(count>500) %>% 
+    group_by(ep_year, word) %>%
+    summarize(n = sum(count)) %>% 
+    mutate(proportion = n / sum(n)) %>% 
+    pivot_wider(id_cols = word, names_from = ep_year, values_from = proportion) %>% 
+    ggplot(aes(x = `2013`, y = `2023`, color = abs(`2013` - `2023`))) +
+      geom_abline(color = "gray40", lty = 2) +
+      geom_jitter(alpha = 0.1, size = 2.5, width = 0.3, height = 0.3) +
+      geom_text(aes(label = word), check_overlap = TRUE, vjust = 1.5) +
+      scale_x_log10(labels = percent_format()) +
+      scale_y_log10(labels = percent_format()) +
+      scale_color_gradient(limits = c(0, 0.001), low = "darkslategray4", high = "gray75") +
+      theme(legend.position="none") +
+      labs(y = '2023', x = '2013', title = 'Word Frequency Changes Between 2013 & 2023') 
+    
+
+
+```
+
+
